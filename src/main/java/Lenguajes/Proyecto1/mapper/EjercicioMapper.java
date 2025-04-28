@@ -1,29 +1,50 @@
 package Lenguajes.Proyecto1.mapper;
 
 import Lenguajes.Proyecto1.domain.Ejercicio;
+import Lenguajes.Proyecto1.domain.ImagenEjercicio;
 import Lenguajes.Proyecto1.dto.EjercicioDTO;
+import Lenguajes.Proyecto1.dto.ImagenEjercicioDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mappings;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface EjercicioMapper {
 
-    EjercicioMapper INSTANCE = Mappers.getMapper(EjercicioMapper.class);
+    @Mappings({
+            @Mapping(target = "imagenes", expression = "java(mapImagenes(ejercicioDTO.getImagenes()))")
+    })
+    Ejercicio toEjercicio(EjercicioDTO ejercicioDTO);
 
-    @Mapping(source = "idEjercicio", target = "idEjercicio")
-    @Mapping(source = "idCategoriaEjercicio", target = "idCategoriaEjercicio")
-    @Mapping(source = "nombreEjercicio", target = "nombreEjercicio")
-    @Mapping(source = "descripcionEjercicio", target = "descripcionEjercicio")
-    @Mapping(source = "codigoEquipo", target = "codigoEquipo")
+    @Mappings({
+            @Mapping(target = "imagenes", expression = "java(mapImagenesDTO(ejercicio.getImagenes()))")
+    })
     EjercicioDTO toDto(Ejercicio ejercicio);
 
-    @Mapping(source = "idEjercicio", target = "idEjercicio")
-    @Mapping(source = "idCategoriaEjercicio", target = "idCategoriaEjercicio")
-    @Mapping(source = "nombreEjercicio", target = "nombreEjercicio")
-    @Mapping(source = "descripcionEjercicio", target = "descripcionEjercicio")
-    @Mapping(source = "codigoEquipo", target = "codigoEquipo")
-    Ejercicio toEntity(EjercicioDTO ejercicioDTO);
+    default List<ImagenEjercicio> mapImagenes(List<ImagenEjercicioDTO> imagenesDTO) {
+        if (imagenesDTO == null) {
+            return null;
+        }
+        return imagenesDTO.stream().map(imagenDTO -> {
+            ImagenEjercicio imagen = new ImagenEjercicio();
+            imagen.setUrlImagen(imagenDTO.getUrlImagen());
+            imagen.setDescripcionImagen(imagenDTO.getDescripcionImagen());
+            return imagen;
+        }).collect(Collectors.toList());
+    }
 
-
+    default List<ImagenEjercicioDTO> mapImagenesDTO(List<ImagenEjercicio> imagenes) {
+        if (imagenes == null) {
+            return null;
+        }
+        return imagenes.stream().map(imagen -> {
+            ImagenEjercicioDTO imagenDTO = new ImagenEjercicioDTO();
+            imagenDTO.setUrlImagen(imagen.getUrlImagen());
+            imagenDTO.setDescripcionImagen(imagen.getDescripcionImagen());
+            return imagenDTO;
+        }).collect(Collectors.toList());
+    }
 }

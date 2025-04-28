@@ -3,6 +3,7 @@ package Lenguajes.Proyecto1.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public class EjercicioDTO {
 
@@ -22,6 +23,8 @@ public class EjercicioDTO {
 
     @Size(max = 20, message = "El código del equipo no puede tener más de 20 caracteres")
     private String codigoEquipo;
+
+    private List<ImagenEjercicioDTO> imagenes; // Cambiado a lista
 
     // Getters y Setters
     public int getIdEjercicio() {
@@ -62,5 +65,13 @@ public class EjercicioDTO {
 
     public void setCodigoEquipo(String codigoEquipo) {
         this.codigoEquipo = codigoEquipo;
+    }
+
+    public List<ImagenEjercicioDTO> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenEjercicioDTO> imagenes) {
+        this.imagenes = imagenes;
     }
 }
