@@ -151,4 +151,6 @@ public class MedidaCorporalData {
 
         simpleJdbcCall.execute(idMedida);
     }
+
+
 }

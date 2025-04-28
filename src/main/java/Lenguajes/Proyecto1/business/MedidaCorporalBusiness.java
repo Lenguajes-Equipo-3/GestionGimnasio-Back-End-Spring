@@ -19,7 +19,6 @@ public class MedidaCorporalBusiness {
     }
 
     public MedidaCorporal getMedidaCorporalById(int idMedida) {
-        // Validar el ID
         if (idMedida <= 0) {
             throw new IllegalArgumentException("El ID de la medida no es válido.");
         }
@@ -31,7 +30,6 @@ public class MedidaCorporalBusiness {
         return medidaCorporalData.findAll();
     }
 
-    // Método para actualizar una Medida Corporal
     public void updateMedidaCorporal(MedidaCorporal medida) {
         if (medida.getIdMedida() <= 0) {
             throw new IllegalArgumentException("El ID de la medida es inválido.");
