@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaEjercicio {
-    private int idCategoria;
+    private int idCategoriaEjercicio;
     private String nombreCategoria;
     private String imagen;
     private List<Ejercicio> ejercicios;
@@ -14,11 +14,11 @@ public class CategoriaEjercicio {
     }
 
     public int getIdCategoria() {
-        return idCategoria;
+        return idCategoriaEjercicio;
     }
 
     public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
+        this.idCategoriaEjercicio = idCategoria;
     }
 
     public String getNombreCategoria() {
