@@ -14,6 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categoriasmedidascorporales")
+@CrossOrigin(origins = "http://localhost:4200")  // Permite solicitudes desde localhost:4200
+
 public class CategoriaMedidaCorporalRestController {
 
     @Autowired
