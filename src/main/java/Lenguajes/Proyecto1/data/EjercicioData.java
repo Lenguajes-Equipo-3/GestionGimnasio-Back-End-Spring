@@ -161,4 +161,60 @@ public class EjercicioData {
         return (List<Map<String, Object>>) simpleJdbcCall.execute(Map.of("id_ejercicio", idEjercicio)).get("#result-set-1");
     }
 
+    @Transactional
+    public void update(Ejercicio ejercicio) {
+        // Actualizar el ejercicio
+        SimpleJdbcCall updateEjercicioCall = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("dbo")
+                .withProcedureName("sp_ActualizarEjercicio")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter("id_ejercicio", Types.INTEGER),
+                        new SqlParameter("id_categoria_ejercicio", Types.INTEGER),
+                        new SqlParameter("nombre_ejercicio", Types.VARCHAR),
+                        new SqlParameter("descripcion_ejercicio", Types.VARCHAR),
+                        new SqlParameter("codigo_equipo", Types.VARCHAR)
+                );
+
+        updateEjercicioCall.execute(
+                Map.of(
+                        "id_ejercicio", ejercicio.getIdEjercicio(),
+                        "id_categoria_ejercicio", ejercicio.getIdCategoriaEjercicio(),
+                        "nombre_ejercicio", ejercicio.getNombreEjercicio(),
+                        "descripcion_ejercicio", ejercicio.getDescripcionEjercicio(),
+                        "codigo_equipo", ejercicio.getCodigoEquipo()
+                )
+        );
+
+        // Actualizar las imágenes
+        SimpleJdbcCall updateImagenesCall = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("dbo")
+                .withProcedureName("sp_EliminarImagenesEjercicio")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_ejercicio", Types.INTEGER));
+
+        // Primero eliminar las imágenes existentes
+        updateImagenesCall.execute(Map.of("id_ejercicio", ejercicio.getIdEjercicio()));
+
+        // Insertar las nuevas imágenes
+        for (ImagenEjercicio imagen : ejercicio.getImagenes()) {
+            saveImagen(ejercicio.getIdEjercicio(), imagen);
+        }
+    }
+
+    @Transactional
+    public void delete(int idEjercicio) {
+        // Configurar el procedimiento almacenado
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("dbo")
+                .withProcedureName("sp_EliminarEjercicio")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter("id_ejercicio", Types.INTEGER)
+                );
+
+        // Ejecutar el procedimiento almacenado
+        simpleJdbcCall.execute(Map.of("id_ejercicio", idEjercicio));
+    }
+
 }
