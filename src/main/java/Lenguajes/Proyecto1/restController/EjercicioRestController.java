@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ejercicios")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EjercicioRestController {
 
     @Autowired
