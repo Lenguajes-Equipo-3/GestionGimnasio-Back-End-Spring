@@ -36,10 +36,10 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public void actualizarCliente(@PathVariable int id, @RequestBody ClienteDTO clienteDTO) {
-        clienteDTO.setIdCliente(id);
+        clienteDTO.setIdCliente(id);  // El id recibido de la URL debe ser asignado al objeto clienteDTO
         clienteBusiness.actualizarCliente(clienteDTO);
     }
-
+    
     @DeleteMapping("/{id}")
     public void eliminarCliente(@PathVariable int id) {
         clienteBusiness.eliminarCliente(id);
