@@ -48,19 +48,19 @@ public class EjercicioRestController {
         return new ResponseEntity<>(ejercicios.stream().map(ejercicioMapper::toDto).toList(), HttpStatus.OK);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<EjercicioDTO> updateEjercicio(@PathVariable int id, @Validated @RequestBody EjercicioDTO ejercicioDTO) {
-//        Ejercicio ejercicio = ejercicioMapper.toEjercicio(ejercicioDTO);
-//        ejercicio.setIdEjercicio(id);
-//        ejercicioBusiness.updateEjercicio(ejercicio);
-//        return new ResponseEntity<>(ejercicioMapper.toDto(ejercicio), HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteEjercicio(@PathVariable int id) {
-//        ejercicioBusiness.deleteEjercicio(id);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<EjercicioDTO> updateEjercicio(@PathVariable int id, @Validated @RequestBody EjercicioDTO ejercicioDTO) {
+        Ejercicio ejercicio = ejercicioMapper.toEjercicio(ejercicioDTO);
+        ejercicio.setIdEjercicio(id);
+        ejercicioBusiness.updateEjercicio(ejercicio);
+        return new ResponseEntity<>(ejercicioMapper.toDto(ejercicio), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEjercicio(@PathVariable int id) {
+        ejercicioBusiness.deleteEjercicio(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @GetMapping("/{id}/imagenes")
     public ResponseEntity<List<Map<String, Object>>> getImagenesByEjercicioId(@PathVariable int id) {
