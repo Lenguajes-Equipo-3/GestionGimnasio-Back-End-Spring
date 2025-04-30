@@ -48,34 +48,34 @@ public class EjercicioBusiness {
 
     }
 
-//    public void updateEjercicio(Ejercicio ejercicio) {
-//        // Validar los datos del ejercicio
-//        if (ejercicio.getIdEjercicio() <= 0) {
-//            throw new IllegalArgumentException("El ID del ejercicio no es válido");
-//        }
-//        if (ejercicio.getNombreEjercicio() == null || ejercicio.getNombreEjercicio().isEmpty()) {
-//            throw new IllegalArgumentException("El nombre del ejercicio no puede estar vacío");
-//        }
-//        if (ejercicio.getDescripcionEjercicio() == null || ejercicio.getDescripcionEjercicio().isEmpty()) {
-//            throw new IllegalArgumentException("La descripción del ejercicio no puede estar vacía");
-//        }
-//        if (ejercicio.getCodigoEquipo() == null || ejercicio.getCodigoEquipo().isEmpty()) {
-//            throw new IllegalArgumentException("El código del equipo no puede estar vacío");
-//        }
-//
-//        // Actualizar el ejercicio en la base de datos
-//        ejercicioData.update(ejercicio);
-//    }
-//
-//    public void deleteEjercicio(int idEjercicio) {
-//        // Validar el ID del ejercicio
-//        if (idEjercicio <= 0) {
-//            throw new IllegalArgumentException("El ID del ejercicio no es válido");
-//        }
-//
-//        // Eliminar el ejercicio de la base de datos
-//        ejercicioData.delete(idEjercicio);
-//    }
+    public void updateEjercicio(Ejercicio ejercicio) {
+        // Validar los datos del ejercicio
+        if (ejercicio.getIdEjercicio() <= 0) {
+            throw new IllegalArgumentException("El ID del ejercicio no es válido");
+        }
+        if (ejercicio.getNombreEjercicio() == null || ejercicio.getNombreEjercicio().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del ejercicio no puede estar vacío");
+        }
+        if (ejercicio.getDescripcionEjercicio() == null || ejercicio.getDescripcionEjercicio().isEmpty()) {
+            throw new IllegalArgumentException("La descripción del ejercicio no puede estar vacía");
+        }
+        if (ejercicio.getCodigoEquipo() == null || ejercicio.getCodigoEquipo().isEmpty()) {
+            throw new IllegalArgumentException("El código del equipo no puede estar vacío");
+        }
+
+        // Actualizar el ejercicio en la base de datos
+        ejercicioData.update(ejercicio);
+    }
+
+    public void deleteEjercicio(int idEjercicio) {
+        // Validar el ID del ejercicio
+        if (idEjercicio <= 0) {
+            throw new IllegalArgumentException("El ID del ejercicio no es válido");
+        }
+
+        // Eliminar el ejercicio de la base de datos
+        ejercicioData.delete(idEjercicio);
+    }
 
     public List<Ejercicio> getAllEjercicios() {
         // Obtener todos los ejercicios de la base de datos
