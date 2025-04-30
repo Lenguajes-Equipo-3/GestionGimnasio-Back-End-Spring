@@ -1,5 +1,6 @@
 package Lenguajes.Proyecto1.domain;
 
+import java.util.List;
 
 public class Ejercicio {
     private int idEjercicio;
@@ -7,10 +8,9 @@ public class Ejercicio {
     private String nombreEjercicio;
     private String descripcionEjercicio;
     private String codigoEquipo;
+    private List<ImagenEjercicio> imagenes; // Cambiado a lista
 
-    public Ejercicio() {
-    }
-
+    // Getters y Setters
     public int getIdEjercicio() {
         return idEjercicio;
     }
@@ -49,5 +49,13 @@ public class Ejercicio {
 
     public void setCodigoEquipo(String codigoEquipo) {
         this.codigoEquipo = codigoEquipo;
+    }
+
+    public List<ImagenEjercicio> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<ImagenEjercicio> imagenes) {
+        this.imagenes = imagenes;
     }
 }
