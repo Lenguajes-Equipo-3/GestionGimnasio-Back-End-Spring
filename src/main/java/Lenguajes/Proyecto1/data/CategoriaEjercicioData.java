@@ -22,7 +22,7 @@ public class CategoriaEjercicioData {
     @Transactional
     public void save(CategoriaEjercicio categoriaEjercicio) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_CrearCategoriaEjercicio")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
@@ -41,7 +41,7 @@ public class CategoriaEjercicioData {
     @Transactional(readOnly = true)
     public CategoriaEjercicio findById(int idCategoria) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerCategoriaEjercicioPorId") // Asegúrate que este SP exista
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
@@ -61,7 +61,7 @@ public class CategoriaEjercicioData {
     @Transactional(readOnly = true)
     public List<CategoriaEjercicio> findAll() {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_ConsultarCategoriaEjercicio");
 
         Map<String, Object> result = simpleJdbcCall.execute();
@@ -111,7 +111,7 @@ public class CategoriaEjercicioData {
     @Transactional
     public void delete(int idCategoria) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_EliminarCategoriaEjercicio")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
