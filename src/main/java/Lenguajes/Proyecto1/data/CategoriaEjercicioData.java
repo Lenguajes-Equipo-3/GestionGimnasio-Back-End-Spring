@@ -80,26 +80,33 @@ public class CategoriaEjercicioData {
         return categorias;
     }
 
-    @Transactional
     public void update(CategoriaEjercicio categoriaEjercicio) {
-        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+        try {
+            SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo") // usa el esquema, no el catalogo
                 .withProcedureName("sp_ActualizarCategoriaEjercicio")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                        new SqlParameter("@id_categoria", Types.INTEGER),
-                        new SqlParameter("@nombre_categoria", Types.NVARCHAR),
-                        new SqlParameter("@imagen", Types.NVARCHAR)
+                    new SqlParameter("@id_categoria", Types.INTEGER),
+                    new SqlParameter("@nombre_categoria", Types.VARCHAR),
+                    new SqlParameter("@imagen", Types.VARCHAR)
                 );
 
-        simpleJdbcCall.execute(
+            simpleJdbcCall.execute(
                 Map.of(
-                        "id_categoria", categoriaEjercicio.getIdCategoria(),
-                        "nombre_categoria", categoriaEjercicio.getNombreCategoria(),
-                        "imagen", categoriaEjercicio.getImagen()
+                    "@id_categoria", categoriaEjercicio.getIdCategoria(),
+                    "@nombre_categoria", categoriaEjercicio.getNombreCategoria(),
+                    "@imagen", categoriaEjercicio.getImagen()
                 )
-        );
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error en updateCategoriaEjercicio: " + e.getMessage());
+            throw e;
+        }
     }
+
+
+
 
     @Transactional
     public void delete(int idCategoria) {
