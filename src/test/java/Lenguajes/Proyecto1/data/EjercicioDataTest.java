@@ -19,7 +19,7 @@ class EjercicioDataTest {
     private EjercicioData ejercicioData;
 
     @Test
-    @Sql(scripts = "/clean_database.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/limpiar_tablas_ejercicio_imagen.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     void save_ejercicio_test() {
         // Arrange: Crear un ejercicio con datos de prueba
         Ejercicio ejercicio = new Ejercicio();
@@ -47,7 +47,7 @@ class EjercicioDataTest {
     }
 
     @Test
-    @Sql(scripts = "/clean_database.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/limpiar_tablas_ejercicio_imagen.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     void update_ejercicio_test() {
         // Arrange: Crear y guardar un ejercicio inicial
         Ejercicio ejercicio = new Ejercicio();
@@ -86,7 +86,7 @@ class EjercicioDataTest {
     }
 
     @Test
-    @Sql(scripts = "/clean_database.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/limpiar_tablas_ejercicio_imagen.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     void delete_ejercicio_test() {
         // Arrange: Crear y guardar un ejercicio inicial
         Ejercicio ejercicio = new Ejercicio();
@@ -111,7 +111,7 @@ class EjercicioDataTest {
     }
 
     @Test
-    @Sql(scripts = {"/clean_database.sql", "/save_ejercicio_con_imagenes.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"/limpiar_tablas_ejercicio_imagen.sql", "/save_ejercicio_con_imagenes.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     void find_all_ejercicios_test() {
         // Act: Obtener todos los ejercicios
         List<Ejercicio> ejercicios = ejercicioData.findAll();
@@ -140,7 +140,7 @@ class EjercicioDataTest {
     }
 
     @Test
-    @Sql(scripts = {"/clean_database.sql", "/save_ejercicio_con_imagenes.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"/limpiar_tablas_ejercicio_imagen.sql", "/save_ejercicio_con_imagenes.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
     void find_ejercicio_by_id_test() {
         // Act: Obtener el ejercicio con ID 1
         Ejercicio ejercicio = ejercicioData.findById(1);
@@ -149,6 +149,26 @@ class EjercicioDataTest {
         assertNotNull(ejercicio, "El ejercicio no debe ser nulo");
         assertEquals(1, ejercicio.getIdEjercicio(), "El ID del ejercicio debe ser 1");
         assertEquals(1, ejercicio.getIdCategoriaEjercicio(), "El ID de la categoría debe ser 1");
+        assertEquals("Ejercicio 1", ejercicio.getNombreEjercicio(), "El nombre del ejercicio no coincide");
+        assertEquals("Descripción 1", ejercicio.getDescripcionEjercicio(), "La descripción no coincide");
+        assertEquals("EQ001", ejercicio.getCodigoEquipo(), "El código del equipo no coincide");
+
+        // Verificar las imágenes asociadas
+        assertNotNull(ejercicio.getImagenes(), "La lista de imágenes no debe ser nula");
+        assertEquals(1, ejercicio.getImagenes().size(), "El ejercicio debe tener 1 imagen asociada");
+        assertEquals("http://example.com/imagen1.jpg", ejercicio.getImagenes().get(0).getUrlImagen(), "La URL de la imagen no coincide");
+        assertEquals("Imagen asociada al Ejercicio 1", ejercicio.getImagenes().get(0).getDescripcionImagen(), "La descripción de la imagen no coincide");
+    }
+
+    @Test
+    @Sql(scripts = {"/limpiar_tablas_ejercicio_imagen.sql", "/save_ejercicio_con_imagenes.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+    void find_ejercicio_by_name_test() {
+        // Act: Buscar el ejercicio por nombre
+        Ejercicio ejercicio = ejercicioData.findByName("Ejercicio 1");
+
+        // Assert: Verificar que el ejercicio no sea nulo y que los datos sean correctos
+        assertNotNull(ejercicio, "El ejercicio no debe ser nulo");
+        assertEquals(1, ejercicio.getIdEjercicio(), "El ID del ejercicio debe ser 1");
         assertEquals("Ejercicio 1", ejercicio.getNombreEjercicio(), "El nombre del ejercicio no coincide");
         assertEquals("Descripción 1", ejercicio.getDescripcionEjercicio(), "La descripción no coincide");
         assertEquals("EQ001", ejercicio.getCodigoEquipo(), "El código del equipo no coincide");

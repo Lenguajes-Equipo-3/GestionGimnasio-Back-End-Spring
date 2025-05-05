@@ -42,6 +42,15 @@ public class EjercicioRestController {
         return new ResponseEntity<>(ejercicioMapper.toDto(ejercicio), HttpStatus.OK);
     }
 
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<EjercicioDTO> getEjercicioByName(@PathVariable String nombre) {
+        Ejercicio ejercicio = ejercicioBusiness.getEjercicioByName(nombre);
+        if (ejercicio == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ejercicioMapper.toDto(ejercicio), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<EjercicioDTO>> getAllEjercicios() {
         List<Ejercicio> ejercicios = ejercicioBusiness.getAllEjercicios();

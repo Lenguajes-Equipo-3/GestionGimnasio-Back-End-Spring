@@ -72,29 +72,58 @@ class EjercicioBusinessTest {
     void testGetEjercicioById() {
         // Arrange: Configurar un ejercicio de prueba
         Ejercicio ejercicio = new Ejercicio();
-        ejercicio.setIdEjercicio(13);
-        ejercicio.setNombreEjercicio("Ejercicio actualizado");
-        ejercicio.setDescripcionEjercicio("Descripción actualizada");
-        ejercicio.setCodigoEquipo("EQ002");
+        ejercicio.setIdEjercicio(1);
+        ejercicio.setNombreEjercicio("Ejercicio 1");
+        ejercicio.setDescripcionEjercicio("Descripción 1");
+        ejercicio.setCodigoEquipo("EQ001");
 
         ImagenEjercicio imagen = new ImagenEjercicio();
-        imagen.setUrlImagen("http://example.com/imagen_actualizada.jpg");
+        imagen.setUrlImagen("http://example.com/imagen.jpg");
         imagen.setDescripcionImagen("Imagen actualizada");
         ejercicio.setImagenes(List.of(imagen));
 
-        when(ejercicioData.findById(13)).thenReturn(ejercicio);
+        when(ejercicioData.findById(1)).thenReturn(ejercicio);
 
         // Act
-        Ejercicio result = ejercicioBusiness.getEjercicioById(13);
+        Ejercicio result = ejercicioBusiness.getEjercicioById(1);
 
         // Assert
         assertNotNull(result);
-        assertEquals(13, result.getIdEjercicio());
-        assertEquals("Ejercicio actualizado", result.getNombreEjercicio());
-        assertEquals("Descripción actualizada", result.getDescripcionEjercicio());
-        assertEquals("EQ002", result.getCodigoEquipo());
+        assertEquals(1, result.getIdEjercicio());
+        assertEquals("Ejercicio 1", result.getNombreEjercicio());
+        assertEquals("Descripción 1", result.getDescripcionEjercicio());
+        assertEquals("EQ001", result.getCodigoEquipo());
         assertEquals(1, result.getImagenes().size());
-        assertEquals("http://example.com/imagen_actualizada.jpg", result.getImagenes().get(0).getUrlImagen());
+        assertEquals("http://example.com/imagen.jpg", result.getImagenes().get(0).getUrlImagen());
+    }
+
+    @Test
+    void testGetEjercicioByName() {
+        // Arrange: Configurar un ejercicio de prueba
+        Ejercicio ejercicio = new Ejercicio();
+        ejercicio.setIdEjercicio(1);
+        ejercicio.setNombreEjercicio("Ejercicio 1");
+        ejercicio.setDescripcionEjercicio("Descripción 1");
+        ejercicio.setCodigoEquipo("EQ001");
+
+        ImagenEjercicio imagen = new ImagenEjercicio();
+        imagen.setUrlImagen("http://example.com/imagen.jpg");
+        imagen.setDescripcionImagen("Imagen 1");
+        ejercicio.setImagenes(List.of(imagen));
+
+        when(ejercicioData.findByName("Ejercicio 1")).thenReturn(ejercicio);
+
+        // Act
+        Ejercicio result = ejercicioBusiness.getEjercicioByName("Ejercicio 1");
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.getIdEjercicio());
+        assertEquals("Ejercicio 1", result.getNombreEjercicio());
+        assertEquals("Descripción 1", result.getDescripcionEjercicio());
+        assertEquals("EQ001", result.getCodigoEquipo());
+        assertEquals(1, result.getImagenes().size());
+        assertEquals("http://example.com/imagen.jpg", result.getImagenes().get(0).getUrlImagen());
     }
 
     @Test

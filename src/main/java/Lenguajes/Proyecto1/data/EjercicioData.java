@@ -116,6 +116,42 @@ public class EjercicioData {
         return ejercicio;
     }
 
+    @Transactional(readOnly = true)
+    public Ejercicio findByName(String nombreEjercicio) {
+        // Llamar al procedimiento almacenado
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("dbo")
+                .withProcedureName("sp_ObtenerEjercicioPorNombre")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("@nombre_ejercicio", Types.VARCHAR));
+
+        Map<String, Object> result = simpleJdbcCall.execute(Map.of("@nombre_ejercicio", nombreEjercicio));
+
+        // Validar si el resultado contiene datos
+        if (result == null || !result.containsKey("#result-set-1")) {
+            return null; // Retorna null si no hay datos
+        }
+
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
+        if (rows.isEmpty()) {
+            return null; // Retorna null si no hay filas
+        }
+
+        // Mapear los datos del ejercicio
+        Map<String, Object> row = rows.get(0);
+        Ejercicio ejercicio = new Ejercicio();
+        ejercicio.setIdEjercicio((Integer) row.get("id_ejercicio"));
+        ejercicio.setIdCategoriaEjercicio((Integer) row.get("id_categoria_ejercicio"));
+        ejercicio.setNombreEjercicio((String) row.get("nombre_ejercicio"));
+        ejercicio.setDescripcionEjercicio((String) row.get("descripcion_ejercicio"));
+        ejercicio.setCodigoEquipo((String) row.get("codigo_equipo"));
+
+        // Obtener las imágenes asociadas
+        ejercicio.setImagenes(findImagenesByEjercicioId(ejercicio.getIdEjercicio()));
+
+        return ejercicio;
+    }
+
     private List<ImagenEjercicio> findImagenesByEjercicioId(int idEjercicio) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("dbo")
@@ -133,7 +169,7 @@ public class EjercicioData {
         List<ImagenEjercicio> imagenes = new ArrayList<>();
         for (Map<String, Object> row : rows) {
             ImagenEjercicio imagen = new ImagenEjercicio();
-            imagen.setIdImagen((Integer) row.get("id_imagen")); // Asegúrate de que el nombre del campo coincide
+            imagen.setIdImagen((Integer) row.get("id_imagen"));
             imagen.setIdEjercicio((Integer) row.get("id_ejercicio"));
             imagen.setUrlImagen((String) row.get("url_imagen"));
             imagen.setDescripcionImagen((String) row.get("descripcion_imagen"));
@@ -233,5 +269,6 @@ public class EjercicioData {
         // Ejecutar el procedimiento almacenado
         simpleJdbcCall.execute(Map.of("id_ejercicio", idEjercicio));
     }
+
 
 }
