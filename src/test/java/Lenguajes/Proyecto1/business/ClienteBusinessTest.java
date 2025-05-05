@@ -40,7 +40,7 @@ class ClienteBusinessTest {
                               "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg");
 
         // Creación de un ClienteDTO de prueba
-        clienteDTO = new ClienteDTO(1, "123456789", "Juan", "Pérez", LocalDate.of(1990, 1, 1), 
+        clienteDTO = new ClienteDTO(1,"123456789", "Juan", "Pérez", LocalDate.of(1990, 1, 1), 
                                     "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg");
     }
 
@@ -83,23 +83,24 @@ class ClienteBusinessTest {
 
     @Test
     void insertarClienteTest() {
-        // Llamada al método que se está probando
+        when(clienteMapper.toEntity(clienteDTO)).thenReturn(cliente); // ✅ Mock correcto
+
         clienteBusiness.insertarCliente(clienteDTO);
 
-        // Verificar si el método de la dependencia fue llamado
         verify(clienteMapper, times(1)).toEntity(clienteDTO);
-        verify(clienteData, times(1)).insertarCliente(any(Cliente.class));
+        verify(clienteData, times(1)).insertarCliente(cliente);
     }
 
     @Test
     void actualizarClienteTest() {
-        // Llamada al método que se está probando
+        when(clienteMapper.toEntity(clienteDTO)).thenReturn(cliente); // ✅ Mock correcto
+
         clienteBusiness.actualizarCliente(clienteDTO);
 
-        // Verificar si el método de la dependencia fue llamado
         verify(clienteMapper, times(1)).toEntity(clienteDTO);
-        verify(clienteData, times(1)).actualizarCliente(any(Cliente.class));
+        verify(clienteData, times(1)).actualizarCliente(cliente);
     }
+
 
     @Test
     void eliminarClienteTest() {

@@ -1,2 +1,5 @@
+
+USE [IF4101_Proyecto1_Grupo3_2025]
+
 DELETE FROM Cliente;
 DBCC CHECKIDENT ('Cliente', RESEED, 0);

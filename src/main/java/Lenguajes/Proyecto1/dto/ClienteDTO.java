@@ -31,6 +31,21 @@ public class ClienteDTO {
         this.fotografia = fotografia;
     }
 
+    
+    public ClienteDTO(String numeroIdentificacion, String nombreCliente, String apellidosCliente,
+            LocalDate fechaNacimiento, String telefono, String direccion,
+            String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia) {
+
+this.numeroIdentificacion = numeroIdentificacion;
+this.nombreCliente = nombreCliente;
+this.apellidosCliente = apellidosCliente;
+this.fechaNacimiento = fechaNacimiento;
+this.telefono = telefono;
+this.direccion = direccion;
+this.nombreContactoEmergencia = nombreContactoEmergencia;
+this.telefonoContactoEmergencia = telefonoContactoEmergencia;
+this.fotografia = fotografia;
+}
     // Getters y Setters
     public int getIdCliente() {
         return idCliente;

@@ -1,3 +1,7 @@
+
+USE [IF4101_Proyecto1_Grupo3_2025]
+
+
 INSERT INTO Cliente (
     numero_Identificacion, nombre_Cliente, apellidos_Cliente, fecha_nacimiento,
     telefono, direccion, nombre_contacto_emergencia, telefono_contacto_emergencia, fotografia
