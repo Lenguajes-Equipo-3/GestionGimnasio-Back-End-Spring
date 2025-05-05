@@ -14,7 +14,6 @@ public class CategoriaMedidaCorporalBusiness {
     @Autowired
     private CategoriaMedidaCorporalData categoriaMedidaCorporalData;
 
-    // Guardar categoría con verificación de duplicados
     public void save(CategoriaMedidaCorporal categoriaMedidaCorporal) {
         // Verificar si el nombre de la categoría ya existe
         if (categoriaMedidaCorporalData.existsByName(categoriaMedidaCorporal.getNombreCategoria())) {

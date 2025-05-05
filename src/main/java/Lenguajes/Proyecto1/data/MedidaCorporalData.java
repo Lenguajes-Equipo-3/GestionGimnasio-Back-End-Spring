@@ -60,7 +60,7 @@ public class MedidaCorporalData {
 
         // Crea un Map para pasar el parámetro
         Map<String, Object> params = new HashMap<>();
-        params.put("id_medida", idMedida);  // Pasa el valor de idMedida como parámetro
+        params.put("id_medida", idMedida);
 
         Map<String, Object> result = null;
         try {
@@ -71,19 +71,17 @@ public class MedidaCorporalData {
         }
 
         if (result == null || result.isEmpty()) {
-            // Si no se encuentra el resultado, devolver null o lanzar una excepción personalizada
-            System.err.println("No se encontró el resultado para el ID de medida: " + idMedida);
+            // Si no se encuentra el resultado
             return null;
         }
 
         // Asegurándote de que la clave "#result-set-1" es correcta
         List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
         if (rows == null || rows.isEmpty()) {
-            System.err.println("No se encontró ningún conjunto de resultados.");
             return null;
         }
         MedidaCorporal medida = new MedidaCorporal();
-        Map<String, Object> row = rows.get(0); // Suponemos que solo habrá un resultado
+        Map<String, Object> row = rows.get(0);
         medida.setIdMedida((int) row.get("id_medida"));
         medida.setNombreMedida((String) row.get("nombre_medida"));
         medida.setUnidadMedida((String) row.get("unidad_medida"));
