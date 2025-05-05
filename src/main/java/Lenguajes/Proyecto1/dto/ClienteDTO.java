@@ -32,6 +32,11 @@ public class ClienteDTO {
     }
 
     
+    public ClienteDTO() {
+        // constructor vacío requerido por Jackson
+    }
+
+    
     public ClienteDTO(String numeroIdentificacion, String nombreCliente, String apellidosCliente,
             LocalDate fechaNacimiento, String telefono, String direccion,
             String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia) {
