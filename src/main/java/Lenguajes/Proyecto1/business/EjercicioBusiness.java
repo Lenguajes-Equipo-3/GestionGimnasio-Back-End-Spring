@@ -48,6 +48,13 @@ public class EjercicioBusiness {
 
     }
 
+    public Ejercicio getEjercicioByName(String nombreEjercicio) {
+        if (nombreEjercicio == null || nombreEjercicio.isEmpty()) {
+            throw new IllegalArgumentException("El nombre del ejercicio no puede estar vacío");
+        }
+        return ejercicioData.findByName(nombreEjercicio);
+    }
+
     public void updateEjercicio(Ejercicio ejercicio) {
         // Validar los datos del ejercicio
         if (ejercicio.getIdEjercicio() <= 0) {
