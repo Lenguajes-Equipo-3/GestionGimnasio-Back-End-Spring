@@ -1,0 +1,2 @@
+DELETE FROM Cliente;
+DBCC CHECKIDENT ('Cliente', RESEED, 0);
