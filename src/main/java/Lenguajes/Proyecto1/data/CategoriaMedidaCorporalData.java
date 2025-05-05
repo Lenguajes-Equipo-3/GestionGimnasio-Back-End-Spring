@@ -3,6 +3,7 @@ package Lenguajes.Proyecto1.data;
 import Lenguajes.Proyecto1.domain.CategoriaMedidaCorporal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
@@ -56,7 +57,6 @@ public class CategoriaMedidaCorporalData {
 
         Map<String, Object> result = simpleJdbcCall.execute(inParams);
 
-// Obtener el resultado
         List<CategoriaMedidaCorporal> categorias = (List<CategoriaMedidaCorporal>) result.get("categoria");
 
         if (categorias == null || categorias.isEmpty()) {
@@ -117,6 +117,31 @@ public class CategoriaMedidaCorporalData {
                 .declareParameters(new SqlParameter("@id_categoria", Types.INTEGER));
         simpleJdbcCall.execute(idCategoria);
     }
+
+    @Transactional(readOnly = true)
+    public Integer findIdByNombre(String nombreCategoria) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ObtenerIdCategoriaPorNombre")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter("nombre_categoria", Types.NVARCHAR),
+                        new SqlOutParameter("id_categoria", Types.INTEGER)
+                );
+
+        Map<String, Object> inParams = new HashMap<>();
+        inParams.put("nombre_categoria", nombreCategoria); // solo input
+
+        Map<String, Object> result = simpleJdbcCall.execute(inParams);
+
+        if (result.containsKey("id_categoria")) {
+            Object id = result.get("id_categoria");
+            return id != null ? (Integer) id : null;
+        }
+
+        return null;
+    }
+
 
 
     // Verificar si el nombre de la categoría ya existe
