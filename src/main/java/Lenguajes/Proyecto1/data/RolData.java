@@ -20,7 +20,7 @@ public class RolData {
     @Transactional(readOnly = true)
     public List<Rol> findAll() {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerRoles")
                 .returningResultSet("#result-set-1",
                         (rs, rowNum) -> { // RowMapper lambda

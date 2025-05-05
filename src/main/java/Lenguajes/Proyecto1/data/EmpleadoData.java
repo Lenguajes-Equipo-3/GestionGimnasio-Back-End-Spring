@@ -26,7 +26,7 @@ public class EmpleadoData {
     @Transactional
     public Empleado save(Empleado empleado, String contrasena) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_RegistrarEmpleado")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
@@ -67,7 +67,7 @@ public class EmpleadoData {
     @Transactional(readOnly = true)
     public Optional<Empleado> findById(int idEmpleado) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerEmpleadoPorId")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
@@ -101,7 +101,7 @@ public class EmpleadoData {
     @Transactional(readOnly = true)
     public List<Empleado> findAll() {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerTodosLosEmpleados");
 
         Map<String, Object> result = simpleJdbcCall.execute();
@@ -119,27 +119,28 @@ public class EmpleadoData {
     }
 
     @Transactional
-    public void update(Empleado empleado, String contrasena) { 
-         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
-                .withProcedureName("sp_ActualizarEmpleado")
+    public void update(Empleado empleado, String passwordOrNull) { 
+    	SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ActualizarEmpleado") // Asume que este SP fue modificado
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
                         new SqlParameter("@id_empleado", Types.INTEGER),
                         new SqlParameter("@nombre_empleado", Types.VARCHAR),
                         new SqlParameter("@apellidos_empleado", Types.VARCHAR),
                         new SqlParameter("@usuario", Types.VARCHAR),
+                        // Permite pasar NULL para la contraseña
                         new SqlParameter("@contrasena", Types.VARCHAR),
                         new SqlParameter("@id_rol", Types.INTEGER)
                 );
 
-        // Crear el mapa de parámetros
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("@id_empleado", empleado.getIdEmpleado());
         parameters.addValue("@nombre_empleado", empleado.getNombreEmpleado());
         parameters.addValue("@apellidos_empleado", empleado.getApellidosEmpleado());
         parameters.addValue("@usuario", empleado.getNombreUsuario());
-        parameters.addValue("@contrasena", contrasena);
+        // Pasa directamente el valor (nueva contraseña o NULL)
+        parameters.addValue("@contrasena", passwordOrNull);
         parameters.addValue("@id_rol", empleado.getRolId());
 
         simpleJdbcCall.execute(parameters);
@@ -148,7 +149,7 @@ public class EmpleadoData {
     @Transactional
     public void delete(int idEmpleado) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("dbo")
+                .withSchemaName("dbo")
                 .withProcedureName("sp_EliminarEmpleado")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(

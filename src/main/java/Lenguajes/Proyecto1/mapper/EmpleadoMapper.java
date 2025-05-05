@@ -2,6 +2,8 @@ package Lenguajes.Proyecto1.mapper;
 
 import Lenguajes.Proyecto1.domain.Empleado;
 import Lenguajes.Proyecto1.dto.EmpleadoDTO;
+import Lenguajes.Proyecto1.dto.EmpleadoUpdateDTO;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings; 
@@ -36,6 +38,21 @@ public interface EmpleadoMapper {
         @Mapping(source = "contrasena", target = "contrasena")
     })
     Empleado toEntity(EmpleadoDTO empleadoDTO);
+    
+    @Mappings({
+        @Mapping(source = "idEmpleado", target = "idEmpleado"),
+        @Mapping(source = "nombreEmpleado", target = "nombreEmpleado"),
+        @Mapping(source = "apellidosEmpleado", target = "apellidosEmpleado"),
+        @Mapping(source = "idUsuario", target = "idUsuario"),
+        @Mapping(source = "nombreUsuario", target = "nombreUsuario"),
+        @Mapping(source = "rolId", target = "rolId"),
+        // No se mapea nombreRol desde el DTO de actualización
+        @Mapping(target = "nombreRol", ignore = true),
+        // Mapear la contraseña (puede ser null si no se envió)
+        @Mapping(source = "contrasena", target = "contrasena")
+    })
+    Empleado toEntity(EmpleadoUpdateDTO empleadoUpdateDTO);
+
 
     List<EmpleadoDTO> toDtoList(List<Empleado> empleados);
     List<Empleado> toEntityList(List<EmpleadoDTO> empleadoDTOs);

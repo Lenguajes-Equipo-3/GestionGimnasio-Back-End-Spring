@@ -3,6 +3,7 @@ package Lenguajes.Proyecto1.restController;
 import Lenguajes.Proyecto1.business.EmpleadoBusiness;
 import Lenguajes.Proyecto1.domain.Empleado;
 import Lenguajes.Proyecto1.dto.EmpleadoDTO;
+import Lenguajes.Proyecto1.dto.EmpleadoUpdateDTO;
 import Lenguajes.Proyecto1.mapper.EmpleadoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,16 +64,22 @@ public class EmpleadoRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmpleadoDTO> updateEmpleado(@PathVariable int id, @Validated @RequestBody EmpleadoDTO empleadoDTO) {
+    public ResponseEntity<EmpleadoDTO> updateEmpleado(
+            @PathVariable int id,                             
+            @Validated @RequestBody EmpleadoUpdateDTO empleadoUpdateDTO) {
         try {
-            Empleado empleadoEntity = empleadoMapper.toEntity(empleadoDTO);
+
+            Empleado empleadoEntity = empleadoMapper.toEntity(empleadoUpdateDTO);
             empleadoEntity.setIdEmpleado(id);
 
-            // Pasa la contraseña directamente desde el DTO
-            empleadoBusiness.updateEmpleado(empleadoEntity, empleadoDTO.getContrasena());
+            empleadoBusiness.updateEmpleado(empleadoEntity, empleadoUpdateDTO.getContrasena());
 
             Empleado updatedEmpleado = empleadoBusiness.getEmpleadoById(id);
-            return new ResponseEntity<>(empleadoMapper.toDto(updatedEmpleado), HttpStatus.OK);
+
+            EmpleadoDTO responseDto = empleadoMapper.toDto(updatedEmpleado);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (RuntimeException e) {
