@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,21 +43,27 @@ public class CategoriaEjercicioData {
     public CategoriaEjercicio findById(int idCategoria) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withSchemaName("dbo")
-                .withProcedureName("sp_ObtenerCategoriaEjercicioPorId") // Asegúrate que este SP exista
-                .withoutProcedureColumnMetaDataAccess()
-                .declareParameters(
-                        new SqlParameter("@id_categoria", Types.INTEGER)
-                );
+                .withProcedureName("sp_ObtenerCategoriaEjercicioPorId")
+                .returningResultSet("categoria",
+                        (rs, rowNum) -> {
+                            CategoriaEjercicio c = new CategoriaEjercicio();
+                            c.setIdCategoria(rs.getInt("id_categoria"));
+                            c.setNombreCategoria(rs.getString("nombre_categoria"));
+                            c.setImagen(rs.getString("imagen"));
+                            return c;
+                        });
 
-        Map<String, Object> result = simpleJdbcCall.execute(idCategoria);
+        Map<String, Object> result = simpleJdbcCall.execute(Collections.singletonMap("IdCategoria", idCategoria));
 
-        CategoriaEjercicio categoria = new CategoriaEjercicio();
-        categoria.setIdCategoria((int) result.get("id_categoria"));
-        categoria.setNombreCategoria((String) result.get("nombre_categoria"));
-        categoria.setImagen((String) result.get("imagen"));
+        List<CategoriaEjercicio> categorias = (List<CategoriaEjercicio>) result.get("categoria");
 
-        return categoria;
+        if (categorias == null || categorias.isEmpty()) {
+            return null;
+        }
+
+        return categorias.get(0);
     }
+
 
     @Transactional(readOnly = true)
     public List<CategoriaEjercicio> findAll() {

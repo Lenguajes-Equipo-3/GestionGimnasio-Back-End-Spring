@@ -1,4 +1,4 @@
-package Lenguajes.Proyecto1.restcontroller;
+package Lenguajes.Proyecto1.restController;
 
 import Lenguajes.Proyecto1.business.ClienteBusiness;
 import Lenguajes.Proyecto1.dto.ClienteDTO;
