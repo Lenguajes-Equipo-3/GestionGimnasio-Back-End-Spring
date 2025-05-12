@@ -1,5 +1,6 @@
 package Lenguajes.Proyecto1.data;
 
+import Lenguajes.Proyecto1.domain.CategoriaEjercicio;
 import Lenguajes.Proyecto1.domain.Ejercicio;
 import Lenguajes.Proyecto1.domain.ImagenEjercicio;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,9 @@ class EjercicioDataTest {
     void save_ejercicio_test() {
         // Arrange: Crear un ejercicio con datos de prueba
         Ejercicio ejercicio = new Ejercicio();
-        ejercicio.setIdCategoriaEjercicio(1);
+        CategoriaEjercicio categoria = new CategoriaEjercicio();
+        categoria.setIdCategoria(1);
+        ejercicio.setCategoriaEjercicio(categoria);
         ejercicio.setNombreEjercicio("Ejercicio de prueba");
         ejercicio.setDescripcionEjercicio("Descripción de prueba");
         ejercicio.setCodigoEquipo("EQ123");
@@ -51,7 +54,9 @@ class EjercicioDataTest {
     void update_ejercicio_test() {
         // Arrange: Crear y guardar un ejercicio inicial
         Ejercicio ejercicio = new Ejercicio();
-        ejercicio.setIdCategoriaEjercicio(1);
+        CategoriaEjercicio categoria = new CategoriaEjercicio();
+        categoria.setIdCategoria(1);
+        ejercicio.setCategoriaEjercicio(categoria);
         ejercicio.setNombreEjercicio("Ejercicio inicial");
         ejercicio.setDescripcionEjercicio("Descripción inicial");
         ejercicio.setCodigoEquipo("EQ001");
@@ -90,7 +95,9 @@ class EjercicioDataTest {
     void delete_ejercicio_test() {
         // Arrange: Crear y guardar un ejercicio inicial
         Ejercicio ejercicio = new Ejercicio();
-        ejercicio.setIdCategoriaEjercicio(1);
+        CategoriaEjercicio categoria = new CategoriaEjercicio();
+        categoria.setIdCategoria(1);
+        ejercicio.setCategoriaEjercicio(categoria);
         ejercicio.setNombreEjercicio("Ejercicio a eliminar");
         ejercicio.setDescripcionEjercicio("Descripción a eliminar");
         ejercicio.setCodigoEquipo("EQ003");
@@ -148,7 +155,7 @@ class EjercicioDataTest {
         // Assert: Verificar que el ejercicio no sea nulo y que los datos sean correctos
         assertNotNull(ejercicio, "El ejercicio no debe ser nulo");
         assertEquals(1, ejercicio.getIdEjercicio(), "El ID del ejercicio debe ser 1");
-        assertEquals(1, ejercicio.getIdCategoriaEjercicio(), "El ID de la categoría debe ser 1");
+        assertEquals(1, ejercicio.getCategoriaEjercicio().getIdCategoria(), "El ID de la categoría debe ser 1");
         assertEquals("Ejercicio 1", ejercicio.getNombreEjercicio(), "El nombre del ejercicio no coincide");
         assertEquals("Descripción 1", ejercicio.getDescripcionEjercicio(), "La descripción no coincide");
         assertEquals("EQ001", ejercicio.getCodigoEquipo(), "El código del equipo no coincide");
