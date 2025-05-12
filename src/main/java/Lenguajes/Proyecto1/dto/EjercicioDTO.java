@@ -7,24 +7,25 @@ import java.util.List;
 
 public class EjercicioDTO {
 
-    @NotNull(message = "El ID del ejercicio no puede ser nulo")
     private int idEjercicio;
 
-    @NotNull(message = "El ID de la categoría del ejercicio no puede ser nulo")
-    private int idCategoriaEjercicio;
+    @NotNull(message = "La categoría del ejercicio no puede ser nula")
+    private CategoriaEjercicioDTO categoriaEjercicio;
 
     @NotBlank(message = "El nombre del ejercicio no puede estar vacío")
-    @Size(max = 50, message = "El nombre del ejercicio no puede tener más de 50 caracteres")
+    @Size(max = 100, message = "El nombre del ejercicio no puede tener más de 100 caracteres")
     private String nombreEjercicio;
 
     @NotBlank(message = "La descripción del ejercicio no puede estar vacía")
-    @Size(max = 100, message = "La descripción del ejercicio no puede tener más de 100 caracteres")
+    @Size(max = 500, message = "La descripción del ejercicio no puede tener más de 500 caracteres")
     private String descripcionEjercicio;
 
-    @Size(max = 20, message = "El código del equipo no puede tener más de 20 caracteres")
+    @NotBlank(message = "El código del equipo no puede estar vacío")
+    @Size(max = 50, message = "El código del equipo no puede tener más de 50 caracteres")
     private String codigoEquipo;
 
-    private List<ImagenEjercicioDTO> imagenes; // Cambiado a lista
+    @NotNull(message = "La lista de imágenes no puede ser nula")
+    private List<ImagenEjercicioDTO> imagenes;
 
     // Getters y Setters
     public int getIdEjercicio() {
@@ -35,12 +36,12 @@ public class EjercicioDTO {
         this.idEjercicio = idEjercicio;
     }
 
-    public int getIdCategoriaEjercicio() {
-        return idCategoriaEjercicio;
+    public CategoriaEjercicioDTO getCategoriaEjercicio() {
+        return categoriaEjercicio;
     }
 
-    public void setIdCategoriaEjercicio(int idCategoriaEjercicio) {
-        this.idCategoriaEjercicio = idCategoriaEjercicio;
+    public void setCategoriaEjercicio(CategoriaEjercicioDTO categoriaEjercicio) {
+        this.categoriaEjercicio = categoriaEjercicio;
     }
 
     public String getNombreEjercicio() {
