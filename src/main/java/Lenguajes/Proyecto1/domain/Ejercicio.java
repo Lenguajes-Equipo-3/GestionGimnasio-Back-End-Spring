@@ -4,11 +4,11 @@ import java.util.List;
 
 public class Ejercicio {
     private int idEjercicio;
-    private int idCategoriaEjercicio;
+    private CategoriaEjercicio categoriaEjercicio;
     private String nombreEjercicio;
     private String descripcionEjercicio;
     private String codigoEquipo;
-    private List<ImagenEjercicio> imagenes; // Cambiado a lista
+    private List<ImagenEjercicio> imagenes;
 
     // Getters y Setters
     public int getIdEjercicio() {
@@ -19,12 +19,12 @@ public class Ejercicio {
         this.idEjercicio = idEjercicio;
     }
 
-    public int getIdCategoriaEjercicio() {
-        return idCategoriaEjercicio;
+    public CategoriaEjercicio getCategoriaEjercicio() {
+        return categoriaEjercicio;
     }
 
-    public void setIdCategoriaEjercicio(int idCategoriaEjercicio) {
-        this.idCategoriaEjercicio = idCategoriaEjercicio;
+    public void setCategoriaEjercicio(CategoriaEjercicio categoriaEjercicio) {
+        this.categoriaEjercicio = categoriaEjercicio;
     }
 
     public String getNombreEjercicio() {
