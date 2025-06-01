@@ -57,6 +57,12 @@ public class RutinaBusiness {
         rutinaData.update(rutina);
     }
 
+    public void deleteRutina(int idRutina) {
+        if (idRutina <= 0) {
+            throw new IllegalArgumentException("El ID de la rutina no es válido");
+        }
+        rutinaData.delete(idRutina);
+    }
 
 
 }

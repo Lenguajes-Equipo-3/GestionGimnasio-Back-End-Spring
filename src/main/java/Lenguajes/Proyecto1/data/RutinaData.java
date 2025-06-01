@@ -399,6 +399,33 @@ public class RutinaData {
 
     }
 
+    public void delete(int idRutina) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_EliminarRutina")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+
+        simpleJdbcCall.execute(Map.of("id_rutina", idRutina));
+
+        // Eliminar los ejercicios asociados a la rutina
+        SimpleJdbcCall deleteEjerciciosCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_EliminarItemsRutinaEjercicio")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+        deleteEjerciciosCall.execute(Map.of("id_rutina", idRutina));
+
+        // Eliminar las medidas asociadas a la rutina
+        SimpleJdbcCall deleteMedidasCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_EliminarItemsRutinaMedida")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+        deleteMedidasCall.execute(Map.of("id_rutina", idRutina));
+
+
+    }
 
     private List<ItemRutinaEjercicio> findItemRutinaEjercicioByRutinaId(int idRutina) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)

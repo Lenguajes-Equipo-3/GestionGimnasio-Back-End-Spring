@@ -89,4 +89,18 @@ public class RutinaRestController {
         return new ResponseEntity<>(rutinaMapper.toDto(rutina), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{idRutina}")
+    public ResponseEntity<Void> deleteRutina(@PathVariable int idRutina) {
+        // Verificar que la rutina existe
+        Rutina rutina = rutinaBusiness.getRutinaById(idRutina);
+        if (rutina == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Eliminar la rutina
+        rutinaBusiness.deleteRutina(idRutina);
+
+        // Retornar respuesta vacía con estado 204 No Content
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
