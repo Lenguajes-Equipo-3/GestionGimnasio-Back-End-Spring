@@ -29,11 +29,10 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(authz -> authz
-                // Si quieres proteger todo, quita esto ↓
-                // .requestMatchers("/api/public/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/media/**").permitAll() // ✅ permite imágenes
+                .requestMatchers("/api/auth/**").permitAll() // ✅ login sin token
+                .anyRequest().authenticated() // lo demás sí requiere token
             )
-            // Aquí se añade el filtro JWT antes del filtro de autenticación estándar
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
