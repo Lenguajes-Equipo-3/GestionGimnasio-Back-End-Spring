@@ -72,4 +72,21 @@ public class RutinaRestController {
         return new ResponseEntity<>(rutinaMapper.toDto(rutina), HttpStatus.OK);
     }
 
+    @PutMapping("/{idRutina}")
+    public ResponseEntity<RutinaDTO> updateRutina(@PathVariable int idRutina, @Validated @RequestBody RutinaDTO rutinaDTO) {
+        // Verificar que el ID de la rutina en el DTO coincida con el ID de la ruta
+        if (rutinaDTO.getIdRutina() != idRutina) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // Mapear el DTO a la entidad
+        Rutina rutina = rutinaMapper.toRutina(rutinaDTO);
+
+        // Actualizar la rutina
+        rutinaBusiness.updateRutina(rutina);
+
+        // Retornar la respuesta
+        return new ResponseEntity<>(rutinaMapper.toDto(rutina), HttpStatus.OK);
+    }
+
 }

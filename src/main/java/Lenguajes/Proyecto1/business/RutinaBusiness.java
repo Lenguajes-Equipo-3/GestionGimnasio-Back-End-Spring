@@ -50,12 +50,12 @@ public class RutinaBusiness {
         return rutinaData.findRutinaByClienteId(idCliente);
     }
 
-//    public void updateRutina(Rutina rutina) {
-//        if (rutina == null || rutina.getIdRutina() <= 0) {
-//            throw new IllegalArgumentException("La rutina o su ID no son válidos");
-//        }
-//        rutinaData.update(rutina);
-//    }
+    public void updateRutina(Rutina rutina) {
+        if (rutina == null || rutina.getIdRutina() <= 0) {
+            throw new IllegalArgumentException("La rutina o su ID no son válidos");
+        }
+        rutinaData.update(rutina);
+    }
 
 
 

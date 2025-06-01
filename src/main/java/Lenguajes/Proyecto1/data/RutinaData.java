@@ -311,6 +311,94 @@ public class RutinaData {
         return rutina;
     }
 
+    public void update(Rutina rutina) {
+        // Actualiza los datos principales de la rutina
+        SimpleJdbcCall updateRutinaCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ActualizarRutina")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter("id_rutina", Types.INTEGER),
+                        new SqlParameter("empleado_id", Types.INTEGER),
+                        new SqlParameter("cliente_id", Types.INTEGER),
+                        new SqlParameter("fecha_creacion", Types.DATE),
+                        new SqlParameter("fecha_renovacion", Types.DATE),
+                        new SqlParameter("objetivo", Types.VARCHAR),
+                        new SqlParameter("lesiones", Types.VARCHAR),
+                        new SqlParameter("enfermedades", Types.VARCHAR),
+                        new SqlParameter("es_vigente", Types.BIT)
+                );
+
+        updateRutinaCall.execute(Map.of(
+                "id_rutina", rutina.getIdRutina(),
+                "empleado_id", rutina.getEmpleado().getIdEmpleado(),
+                "cliente_id", rutina.getCliente().getIdCliente(),
+                "fecha_creacion", rutina.getFechaCreacion(),
+                "fecha_renovacion", rutina.getFechaRenovacion(),
+                "objetivo", rutina.getObjetivo(),
+                "lesiones", rutina.getLesiones(),
+                "enfermedades", rutina.getEnfermedades(),
+                "es_vigente", rutina.isEsVigente()
+        ));
+
+        // Elimina los ejercicios actuales de la rutina
+        SimpleJdbcCall deleteEjerciciosCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_EliminarItemsRutinaEjercicio")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+        deleteEjerciciosCall.execute(Map.of("id_rutina", rutina.getIdRutina()));
+
+        // Inserta los nuevos ejercicios
+        for (ItemRutinaEjercicio item : rutina.getEjercicios()) {
+            SimpleJdbcCall insertEjercicioCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withSchemaName("dbo")
+                    .withProcedureName("sp_RegistrarItemRutinaEjercicio")
+                    .withoutProcedureColumnMetaDataAccess()
+                    .declareParameters(
+                            new SqlParameter("id_rutina", Types.INTEGER),
+                            new SqlParameter("id_ejercicio", Types.INTEGER),
+                            new SqlParameter("series", Types.INTEGER),
+                            new SqlParameter("repeticiones", Types.INTEGER),
+                            new SqlParameter("codigo_equipo", Types.VARCHAR)
+                    );
+            insertEjercicioCall.execute(Map.of(
+                    "id_rutina", rutina.getIdRutina(),
+                    "id_ejercicio", item.getEjercicio().getIdEjercicio(),
+                    "series", item.getSeries(),
+                    "repeticiones", item.getRepeticiones(),
+                    "codigo_equipo", item.getCodigoEquipo()
+            ));
+        }
+
+        // Elimina las medidas actuales de la rutina
+        SimpleJdbcCall deleteMedidasCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_EliminarItemsRutinaMedida")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+        deleteMedidasCall.execute(Map.of("id_rutina", rutina.getIdRutina()));
+
+        // Inserta las nuevas medidas
+        for (ItemRutinaMedida item : rutina.getMedidas()) {
+            SimpleJdbcCall insertMedidaCall = new SimpleJdbcCall(jdbcTemplate)
+                    .withSchemaName("dbo")
+                    .withProcedureName("sp_RegistrarItemRutinaMedida")
+                    .withoutProcedureColumnMetaDataAccess()
+                    .declareParameters(
+                            new SqlParameter("id_medida", Types.INTEGER),
+                            new SqlParameter("id_rutina", Types.INTEGER),
+                            new SqlParameter("valor", Types.FLOAT)
+                    );
+            insertMedidaCall.execute(Map.of(
+                    "id_medida", item.getMedidaCorporal().getIdMedida(),
+                    "id_rutina", rutina.getIdRutina(),
+                    "valor", item.getValor()
+            ));
+        }
+
+    }
+
 
     private List<ItemRutinaEjercicio> findItemRutinaEjercicioByRutinaId(int idRutina) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
