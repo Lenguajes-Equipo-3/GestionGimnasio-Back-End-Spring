@@ -119,7 +119,7 @@ public class RutinaData {
     public List<Rutina> findAll() {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withSchemaName("dbo")
-                .withProcedureName("sp_ConsultarRutinas");
+                .withProcedureName("sp_ObtenerRutinas");
 
         Map<String, Object> result = simpleJdbcCall.execute();
 
@@ -132,15 +132,14 @@ public class RutinaData {
 
             // Mapear empleado
             Empleado empleado = new Empleado();
-            empleado.setIdEmpleado((int) row.get("id_empleado"));
-            // ...otros campos de empleado si están en el resultset
+            int empleadoId= (int) row.get("id_empleado");
+            empleado = empleadoData.findById(empleadoId).orElse(null);;
             rutina.setEmpleado(empleado);
 
             // Mapear cliente
             Cliente cliente = new Cliente();
-            cliente.setIdCliente((int) row.get("id_cliente"));
-            // ...otros campos de cliente si están en el resultset
-            rutina.setCliente(cliente);
+            int clienteId = (int) row.get("id_cliente");
+            rutina.setCliente(clienteData.obtenerClientePorId(clienteId));
 
             // Mapear fechas
             rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
@@ -153,8 +152,8 @@ public class RutinaData {
             rutina.setEsVigente((boolean) row.get("es_vigente"));
 
             // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
-            rutina.setEjercicios(/* consulta y mapeo de ejercicios asociados */);
-            rutina.setMedidas(/* consulta y mapeo de medidas asociadas */);
+            rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+            rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
 
             rutinas.add(rutina);
         }
@@ -162,13 +161,163 @@ public class RutinaData {
         return rutinas;
     }
 
+    @Transactional
+    public Rutina findById(int idRutina) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ObtenerRutinaPorId")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_rutina", Types.INTEGER));
+
+        Map<String, Object> params = Map.of("id_rutina", idRutina);
+
+        Map<String, Object> result = simpleJdbcCall.execute(params);
+
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
+        if (rows == null || rows.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> row = rows.get(0);
+        Rutina rutina = new Rutina();
+        rutina.setIdRutina((int) row.get("id_rutina"));
+
+        // Mapear empleado
+        Empleado empleado = new Empleado();
+        empleado.setIdEmpleado((int) row.get("id_empleado"));
+        empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
+        rutina.setEmpleado(empleado);
+
+        // Mapear cliente
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente((int) row.get("id_cliente"));
+        cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
+        rutina.setCliente(cliente);
+
+        // Mapear fechas
+        rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
+        rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
+
+        // Mapear objetivo, lesiones, enfermedades, esVigente
+        rutina.setObjetivo((String) row.get("objetivo"));
+        rutina.setLesiones((String) row.get("lesiones"));
+        rutina.setEnfermedades((String) row.get("enfermedades"));
+        rutina.setEsVigente((boolean) row.get("es_vigente"));
+
+        // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
+        rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+        rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
+
+        return rutina;
+    }
+
+    @Transactional
+    public Rutina findRutinaByEmpleadoId(int idEmpleado) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ObtenerRutinaPorEmpleadoId")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_empleado", Types.INTEGER));
+
+        Map<String, Object> params = Map.of("id_empleado", idEmpleado);
+
+        Map<String, Object> result = simpleJdbcCall.execute(params);
+
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
+        if (rows == null || rows.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> row = rows.get(0);
+        Rutina rutina = new Rutina();
+        rutina.setIdRutina((int) row.get("id_rutina"));
+
+        // Mapear empleado
+        Empleado empleado = new Empleado();
+        empleado.setIdEmpleado((int) row.get("id_empleado"));
+        empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
+        rutina.setEmpleado(empleado);
+
+        // Mapear cliente
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente((int) row.get("id_cliente"));
+        cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
+        rutina.setCliente(cliente);
+
+        // Mapear fechas
+        rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
+        rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
+
+        // Mapear objetivo, lesiones, enfermedades, esVigente
+        rutina.setObjetivo((String) row.get("objetivo"));
+        rutina.setLesiones((String) row.get("lesiones"));
+        rutina.setEnfermedades((String) row.get("enfermedades"));
+        rutina.setEsVigente((boolean) row.get("es_vigente"));
+
+        // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
+        rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+        rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
+
+        return rutina;
+    }
+
+    @Transactional
+    public Rutina findRutinaByClienteId(int idCliente) {
+        SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withSchemaName("dbo")
+                .withProcedureName("sp_ObtenerRutinaPorClienteId")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(new SqlParameter("id_cliente", Types.INTEGER));
+
+        Map<String, Object> params = Map.of("id_cliente", idCliente);
+
+        Map<String, Object> result = simpleJdbcCall.execute(params);
+
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
+        if (rows == null || rows.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> row = rows.get(0);
+        Rutina rutina = new Rutina();
+        rutina.setIdRutina((int) row.get("id_rutina"));
+
+        // Mapear empleado
+        Empleado empleado = new Empleado();
+        empleado.setIdEmpleado((int) row.get("id_empleado"));
+        empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
+        rutina.setEmpleado(empleado);
+
+        // Mapear cliente
+        Cliente cliente = new Cliente();
+        cliente.setIdCliente((int) row.get("id_cliente"));
+        cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
+        rutina.setCliente(cliente);
+
+        // Mapear fechas
+        rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
+        rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
+
+        // Mapear objetivo, lesiones, enfermedades, esVigente
+        rutina.setObjetivo((String) row.get("objetivo"));
+        rutina.setLesiones((String) row.get("lesiones"));
+        rutina.setEnfermedades((String) row.get("enfermedades"));
+        rutina.setEsVigente((boolean) row.get("es_vigente"));
+
+        // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
+        rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+        rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
+
+        return rutina;
+    }
+
+
     private List<ItemRutinaEjercicio> findItemRutinaEjercicioByRutinaId(int idRutina) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerItemsRutinaEjercicioPorRutinaId")
                 .returningResultSet("items", (rs, rowNum) -> {
                     ItemRutinaEjercicio item = new ItemRutinaEjercicio();
-                    // Asume que tienes métodos para obtener Ejercicio por ID
                     Ejercicio ejercicio = ejercicioData.findById(rs.getInt("id_ejercicio"));
                     item.setEjercicio(ejercicio);
                     item.setSeries(rs.getInt("series"));
@@ -188,7 +337,6 @@ public class RutinaData {
                 .withProcedureName("sp_ObtenerItemsRutinaMedidaPorRutinaId")
                 .returningResultSet("items", (rs, rowNum) -> {
                     ItemRutinaMedida item = new ItemRutinaMedida();
-                    // Asume que tienes métodos para obtener MedidaCorporal por ID
                     MedidaCorporal medida = medidaCorporalData.findById(rs.getInt("id_medida"));
                     item.setMedidaCorporal(medida);
                     item.setValor(rs.getFloat("valor"));
@@ -199,6 +347,10 @@ public class RutinaData {
         List<ItemRutinaMedida> items = (List<ItemRutinaMedida>) result.get("items");
         return items != null ? items : new ArrayList<>();
     }
+
+
+
+
 }
 
 
