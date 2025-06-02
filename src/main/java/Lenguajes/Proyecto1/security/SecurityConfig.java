@@ -29,10 +29,11 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/media/**").permitAll() // ✅ permite imágenes
-                .requestMatchers("/api/auth/**").permitAll() // ✅ login sin token
-                .anyRequest().authenticated() // lo demás sí requiere token
-            )
+            	    .requestMatchers("/media/**").permitAll()
+            	    .requestMatchers("/api/auth/**").permitAll()
+            	    .requestMatchers("/api/rutinas/rutina/reporte/**").permitAll() // 🔓 temporal
+            	    .anyRequest().authenticated()
+            	)
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

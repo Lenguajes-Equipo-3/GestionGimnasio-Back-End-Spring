@@ -7,11 +7,16 @@ import Lenguajes.Proyecto1.domain.Rutina;
 import Lenguajes.Proyecto1.dto.EjercicioDTO;
 import Lenguajes.Proyecto1.dto.RutinaDTO;
 import Lenguajes.Proyecto1.mapper.RutinaMapper;
+import Lenguajes.Proyecto1.service.ReporteRutinaService;
+import io.jsonwebtoken.io.IOException;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +31,9 @@ public class RutinaRestController {
 
     @Autowired
     private RutinaMapper rutinaMapper;
+    
+    @Autowired
+    private ReporteRutinaService reporteRutinaService;
 
     @PostMapping
     public ResponseEntity<RutinaDTO> createRutina(@Validated @RequestBody RutinaDTO rutinaDTO) {
@@ -103,4 +111,18 @@ public class RutinaRestController {
         // Retornar respuesta vacía con estado 204 No Content
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    
+ @GetMapping("/rutina/reporte/{idCliente}")
+public void exportarPDFCliente(@PathVariable int idCliente, HttpServletResponse response) {
+    try {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=rutina_cliente_" + idCliente + ".pdf");
+        reporteRutinaService.exportarRutinaClientePDF(idCliente, response.getOutputStream());
+    } catch (Exception e) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al generar el PDF de rutina", e);
+    }
+}
+
+    
 }
