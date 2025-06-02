@@ -29,7 +29,7 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(authz -> authz
-            	    .requestMatchers("/media/**").permitAll()
+            	    .requestMatchers("/proyecto/media/**").permitAll()
             	    .requestMatchers("/api/auth/**").permitAll()
             	    .requestMatchers("/api/rutinas/rutina/reporte/**").permitAll() // 🔓 temporal
             	    .anyRequest().authenticated()
