@@ -212,7 +212,7 @@ public class RutinaData {
     }
 
     @Transactional
-    public Rutina findRutinaByEmpleadoId(int idEmpleado) {
+    public List<Rutina> findRutinasByEmpleadoId(int idEmpleado) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerRutinaPorEmpleadoId")
@@ -225,44 +225,48 @@ public class RutinaData {
 
         List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
         if (rows == null || rows.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
-        Map<String, Object> row = rows.get(0);
-        Rutina rutina = new Rutina();
-        rutina.setIdRutina((int) row.get("id_rutina"));
+        List<Rutina> rutinas = new ArrayList<>();
+        for (Map<String, Object> row : rows) {
+            Rutina rutina = new Rutina();
+            rutina.setIdRutina((int) row.get("id_rutina"));
 
-        // Mapear empleado
-        Empleado empleado = new Empleado();
-        empleado.setIdEmpleado((int) row.get("id_empleado"));
-        empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
-        rutina.setEmpleado(empleado);
+            // Mapear empleado
+            Empleado empleado = new Empleado();
+            empleado.setIdEmpleado((int) row.get("id_empleado"));
+            empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
+            rutina.setEmpleado(empleado);
 
-        // Mapear cliente
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente((int) row.get("id_cliente"));
-        cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
-        rutina.setCliente(cliente);
+            // Mapear cliente
+            Cliente cliente = new Cliente();
+            cliente.setIdCliente((int) row.get("id_cliente"));
+            cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
+            rutina.setCliente(cliente);
 
-        // Mapear fechas
-        rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
-        rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
+            // Mapear fechas
+            rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
+            rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
 
-        // Mapear objetivo, lesiones, enfermedades, esVigente
-        rutina.setObjetivo((String) row.get("objetivo"));
-        rutina.setLesiones((String) row.get("lesiones"));
-        rutina.setEnfermedades((String) row.get("enfermedades"));
-        rutina.setEsVigente((boolean) row.get("es_vigente"));
+            // Mapear objetivo, lesiones, enfermedades, esVigente
+            rutina.setObjetivo((String) row.get("objetivo"));
+            rutina.setLesiones((String) row.get("lesiones"));
+            rutina.setEnfermedades((String) row.get("enfermedades"));
+            rutina.setEsVigente((boolean) row.get("es_vigente"));
 
-        // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
-        rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
-        rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
+            // Mapear ejercicios y medidas
+            rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+            rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
 
-        return rutina;
+            rutinas.add(rutina);
+        }
+
+        return rutinas;
     }
 
     @Transactional
-    public Rutina findRutinaByClienteId(int idCliente) {
+    public List<Rutina> findRutinasByClienteId(int idCliente) {
         SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withSchemaName("dbo")
                 .withProcedureName("sp_ObtenerRutinaPorClienteId")
@@ -275,40 +279,44 @@ public class RutinaData {
 
         List<Map<String, Object>> rows = (List<Map<String, Object>>) result.get("#result-set-1");
         if (rows == null || rows.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
-        Map<String, Object> row = rows.get(0);
-        Rutina rutina = new Rutina();
-        rutina.setIdRutina((int) row.get("id_rutina"));
+        List<Rutina> rutinas = new ArrayList<>();
+        for (Map<String, Object> row : rows) {
+            Rutina rutina = new Rutina();
+            rutina.setIdRutina((int) row.get("id_rutina"));
 
-        // Mapear empleado
-        Empleado empleado = new Empleado();
-        empleado.setIdEmpleado((int) row.get("id_empleado"));
-        empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
-        rutina.setEmpleado(empleado);
+            // Mapear empleado
+            Empleado empleado = new Empleado();
+            empleado.setIdEmpleado((int) row.get("id_empleado"));
+            empleado = empleadoData.findById(empleado.getIdEmpleado()).orElse(null);
+            rutina.setEmpleado(empleado);
 
-        // Mapear cliente
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente((int) row.get("id_cliente"));
-        cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
-        rutina.setCliente(cliente);
+            // Mapear cliente
+            Cliente cliente = new Cliente();
+            cliente.setIdCliente((int) row.get("id_cliente"));
+            cliente = clienteData.obtenerClientePorId(cliente.getIdCliente());
+            rutina.setCliente(cliente);
 
-        // Mapear fechas
-        rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
-        rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
+            // Mapear fechas
+            rutina.setFechaCreacion(((java.sql.Date) row.get("fecha_creacion")).toLocalDate());
+            rutina.setFechaRenovacion(((java.sql.Date) row.get("fecha_renovacion")).toLocalDate());
 
-        // Mapear objetivo, lesiones, enfermedades, esVigente
-        rutina.setObjetivo((String) row.get("objetivo"));
-        rutina.setLesiones((String) row.get("lesiones"));
-        rutina.setEnfermedades((String) row.get("enfermedades"));
-        rutina.setEsVigente((boolean) row.get("es_vigente"));
+            // Mapear objetivo, lesiones, enfermedades, esVigente
+            rutina.setObjetivo((String) row.get("objetivo"));
+            rutina.setLesiones((String) row.get("lesiones"));
+            rutina.setEnfermedades((String) row.get("enfermedades"));
+            rutina.setEsVigente((boolean) row.get("es_vigente"));
 
-        // Mapear ejercicios y medidas (debes hacer consultas adicionales o joins)
-        rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
-        rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
+            // Mapear ejercicios y medidas
+            rutina.setEjercicios(this.findItemRutinaEjercicioByRutinaId(rutina.getIdRutina()));
+            rutina.setMedidas(this.findItemRutinaMedidaByRutinaId(rutina.getIdRutina()));
 
-        return rutina;
+            rutinas.add(rutina);
+        }
+
+        return rutinas;
     }
 
     public void update(Rutina rutina) {
@@ -462,6 +470,8 @@ public class RutinaData {
         List<ItemRutinaMedida> items = (List<ItemRutinaMedida>) result.get("items");
         return items != null ? items : new ArrayList<>();
     }
+
+
 
 
 

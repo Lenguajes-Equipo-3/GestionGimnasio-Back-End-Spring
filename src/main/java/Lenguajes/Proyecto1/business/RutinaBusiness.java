@@ -36,18 +36,18 @@ public class RutinaBusiness {
         return rutinaData.findById(idRutina);
     }
 
-    public Rutina getRutinaByEmpleadoId(int idEmpleado) {
+    public List<Rutina> getRutinasByEmpleadoId(int idEmpleado) {
         if (idEmpleado <= 0) {
             throw new IllegalArgumentException("El ID del empleado no es válido");
         }
-        return rutinaData.findRutinaByEmpleadoId(idEmpleado);
+        return rutinaData.findRutinasByEmpleadoId(idEmpleado);
     }
 
-    public Rutina getRutinaByClienteId(int idCliente) {
+    public List<Rutina> getRutinasByClienteId(int idCliente) {
         if (idCliente <= 0) {
             throw new IllegalArgumentException("El ID del cliente no es válido");
         }
-        return rutinaData.findRutinaByClienteId(idCliente);
+        return rutinaData.findRutinasByClienteId(idCliente);
     }
 
     public void updateRutina(Rutina rutina) {
