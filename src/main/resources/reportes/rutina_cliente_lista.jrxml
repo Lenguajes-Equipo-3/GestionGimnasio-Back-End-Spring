@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jasperReport name="rutina_cliente_lista" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd">
+
+    <!-- ✅ Parámetro que recibe el subreporte rutina_cliente.jrxml ya compilado -->
+    <parameter name="SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
+
+    <!-- ✅ Parámetro que se pasará desde Java hacia rutina_cliente.jrxml -->
+    <parameter name="EJERCICIOS_SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
+
+    <!-- Campos del objeto Rutina -->
+    <field name="idRutina" class="java.lang.Integer"/>
+    <field name="fechaCreacion" class="java.time.LocalDate"/>
+    <field name="fechaRenovacion" class="java.time.LocalDate"/>
+    <field name="objetivo" class="java.lang.String"/>
+    <field name="lesiones" class="java.lang.String"/>
+    <field name="enfermedades" class="java.lang.String"/>
+    <field name="empleado" class="Lenguajes.Proyecto1.domain.Empleado"/>
+    <field name="cliente" class="Lenguajes.Proyecto1.domain.Cliente"/>
+    <field name="ejercicios" class="java.util.List"/>
+
+    <detail>
+        <band height="400">
+            <subreport>
+                <reportElement x="0" y="0" width="555" height="200"/>
+
+                <!-- ✅ Pasar el subreporte de ejercicios como parámetro al subreporte rutina_cliente -->
+                <subreportParameter name="EJERCICIOS_SUBREPORT">
+                    <subreportParameterExpression><![CDATA[$P{EJERCICIOS_SUBREPORT}]]></subreportParameterExpression>
+                </subreportParameter>
+
+                <!-- ✅ Fuente de datos para cada rutina -->
+                <dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(java.util.Arrays.asList($F{this}))]]></dataSourceExpression>
+
+                <!-- ✅ Subreporte principal rutina_cliente.jrxml -->
+                <subreportExpression><![CDATA[$P{SUBREPORT}]]></subreportExpression>
+            </subreport>
+        </band>
+    </detail>
+
+</jasperReport>

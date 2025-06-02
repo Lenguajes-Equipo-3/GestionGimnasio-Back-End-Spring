@@ -1,7 +1,5 @@
 package Lenguajes.Proyecto1.service;
 
-import Lenguajes.Proyecto1.domain.Ejercicio;
-import Lenguajes.Proyecto1.domain.ItemRutinaEjercicio;
 import Lenguajes.Proyecto1.domain.Rutina;
 import Lenguajes.Proyecto1.data.RutinaData;
 import net.sf.jasperreports.engine.*;
@@ -21,38 +19,44 @@ public class ReporteRutinaService {
     @Autowired
     private RutinaData rutinaData;
 
-  public void exportarRutinaClientePDF(int idCliente, OutputStream outputStream) {
+public void exportarRutinasClientePDF(int idCliente, OutputStream outputStream) {
     try {
-        Rutina rutina = rutinaData.findRutinaByClienteId(idCliente);
-        if (rutina == null) {
-            throw new RuntimeException("No se encontró rutina para el cliente con ID: " + idCliente);
+        List<Rutina> rutinas = rutinaData.findRutinasByClienteId(idCliente);
+        if (rutinas == null || rutinas.isEmpty()) {
+            throw new RuntimeException("No se encontraron rutinas para el cliente con ID: " + idCliente);
         }
 
-        List<ItemRutinaEjercicio> ejercicios = rutina.getEjercicios();
+        
+        
+        System.out.println(rutinas.size() );
+        // Compilar subreportes
+        InputStream ejerciciosStream = getClass().getResourceAsStream("/reportes/ejercicios_rutina.jrxml");
+        JasperReport subreporteEjercicios = JasperCompileManager.compileReport(ejerciciosStream);
 
+        InputStream rutinaStream = getClass().getResourceAsStream("/reportes/rutina_cliente.jrxml");
+        JasperReport subreporteRutina = JasperCompileManager.compileReport(rutinaStream);
+
+        InputStream listaStream = getClass().getResourceAsStream("/reportes/rutina_cliente_lista.jrxml");
+        JasperReport reportePrincipal = JasperCompileManager.compileReport(listaStream);
+
+        // Parámetros que se pasan a cada uso del subreporte rutina_cliente.jrxml
         Map<String, Object> parametros = new HashMap<>();
-        parametros.put("nombreCliente", rutina.getCliente().getNombreCliente() + " " + rutina.getCliente().getApellidosCliente());
-        parametros.put("telefono", rutina.getCliente().getTelefono());
-        parametros.put("entrenador", rutina.getEmpleado().getNombreEmpleado());
-        parametros.put("fechaCreacion", rutina.getFechaCreacion().toString());
-        parametros.put("fechaRenovacion", rutina.getFechaRenovacion().toString());
-        parametros.put("lesiones", rutina.getLesiones());
-        parametros.put("enfermedades", rutina.getEnfermedades());
+        parametros.put("SUBREPORT", subreporteRutina);
+        parametros.put("EJERCICIOS_SUBREPORT", subreporteEjercicios);
+        
 
-        // Lee y compila el archivo jrxml
-        InputStream inputStream = getClass().getResourceAsStream("/reportes/rutina_cliente.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+        // Llenar el reporte con la lista de rutinas
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rutinas);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(reportePrincipal, parametros, dataSource);
 
-        // Usa directamente la lista como datasource principal
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(ejercicios);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-
+        // Exportar a PDF
         JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
 
     } catch (Exception e) {
-        e.printStackTrace(); // Agregá esto para ver el error real en consola
-        throw new RuntimeException("Error al generar el PDF de rutina", e);
+        e.printStackTrace();
+        throw new RuntimeException("Error al generar el PDF de rutinas del cliente", e);
     }
 }
+
 
 }

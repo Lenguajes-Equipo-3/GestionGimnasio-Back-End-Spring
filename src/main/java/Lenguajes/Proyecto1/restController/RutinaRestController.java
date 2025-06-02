@@ -118,7 +118,7 @@ public void exportarPDFCliente(@PathVariable int idCliente, HttpServletResponse 
     try {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=rutina_cliente_" + idCliente + ".pdf");
-        reporteRutinaService.exportarRutinaClientePDF(idCliente, response.getOutputStream());
+        reporteRutinaService.exportarRutinasClientePDF(idCliente, response.getOutputStream());
     } catch (Exception e) {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al generar el PDF de rutina", e);
     }
