@@ -19,8 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @RestController
-
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/clientes")
 public class ClienteRestController {
 	@Autowired
