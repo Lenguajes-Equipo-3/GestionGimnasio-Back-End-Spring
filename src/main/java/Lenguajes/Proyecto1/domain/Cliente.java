@@ -14,7 +14,7 @@ public class Cliente {
     private String nombreContactoEmergencia;
     private String telefonoContactoEmergencia;
     private String fotografia;
-
+    private String gmail;
     // Constructor por defecto
     public Cliente() {
     }
@@ -22,7 +22,7 @@ public class Cliente {
     // Constructor con parámetros
     public Cliente(int idCliente, String numeroIdentificacion, String nombreCliente, String apellidosCliente,
                    LocalDate fechaNacimiento, String telefono, String direccion,
-                   String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia) {
+                   String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia,String gmail) {
         this.idCliente = idCliente;
         this.numeroIdentificacion = numeroIdentificacion;
         this.nombreCliente = nombreCliente;
@@ -33,6 +33,7 @@ public class Cliente {
         this.nombreContactoEmergencia = nombreContactoEmergencia;
         this.telefonoContactoEmergencia = telefonoContactoEmergencia;
         this.fotografia = fotografia;
+        this.gmail = gmail;
     }
 
     // Getters y Setters
@@ -40,7 +41,15 @@ public class Cliente {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
+    public String getGmail() {
+		return gmail;
+	}
+
+	public void setGmail(String gmail) {
+		this.gmail = gmail;
+	}
+
+	public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
     }
 

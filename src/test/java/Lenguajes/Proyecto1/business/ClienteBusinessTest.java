@@ -37,11 +37,11 @@ class ClienteBusinessTest {
         
         // Creación de un Cliente de prueba
         cliente = new Cliente(1, "123456789", "Juan", "Pérez", LocalDate.of(1990, 1, 1), 
-                              "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg");
+                              "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg","gmail");
 
         // Creación de un ClienteDTO de prueba
         clienteDTO = new ClienteDTO(1,"123456789", "Juan", "Pérez", LocalDate.of(1990, 1, 1), 
-                                    "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg");
+                                    "123456789", "Calle Falsa 123", "Ana", "987654321", "foto.jpg","gmail");
     }
 
     @Test
@@ -51,7 +51,7 @@ class ClienteBusinessTest {
         when(clienteMapper.toDTO(cliente)).thenReturn(clienteDTO);
 
         // Llamada al método que se está probando
-        List<ClienteDTO> clientesDTO = clienteBusiness.obtenerTodosLosClientes();
+        List<Cliente> clientesDTO = clienteBusiness.obtenerTodosLosClientes();
 
         // Verificaciones
         assertNotNull(clientesDTO);
@@ -70,7 +70,7 @@ class ClienteBusinessTest {
         when(clienteMapper.toDTO(cliente)).thenReturn(clienteDTO);
 
         // Llamada al método que se está probando
-        ClienteDTO clienteObtenido = clienteBusiness.obtenerClientePorId(1);
+        Cliente clienteObtenido = clienteBusiness.obtenerClientePorId(1);
 
         // Verificaciones
         assertNotNull(clienteObtenido);
@@ -84,8 +84,8 @@ class ClienteBusinessTest {
     @Test
     void insertarClienteTest() {
         when(clienteMapper.toEntity(clienteDTO)).thenReturn(cliente); // ✅ Mock correcto
-
-        clienteBusiness.insertarCliente(clienteDTO);
+        Cliente cliente = clienteMapper.toEntity(clienteDTO);
+        clienteBusiness.insertarCliente(cliente);
 
         verify(clienteMapper, times(1)).toEntity(clienteDTO);
         verify(clienteData, times(1)).insertarCliente(cliente);
@@ -94,8 +94,9 @@ class ClienteBusinessTest {
     @Test
     void actualizarClienteTest() {
         when(clienteMapper.toEntity(clienteDTO)).thenReturn(cliente); // ✅ Mock correcto
+        Cliente cliente = clienteMapper.toEntity(clienteDTO);
 
-        clienteBusiness.actualizarCliente(clienteDTO);
+        clienteBusiness.actualizarCliente(cliente);
 
         verify(clienteMapper, times(1)).toEntity(clienteDTO);
         verify(clienteData, times(1)).actualizarCliente(cliente);

@@ -32,7 +32,8 @@ public class ClienteData {
                         new SqlParameter("direccion", Types.NVARCHAR),
                         new SqlParameter("nombre_contacto_emergencia", Types.NVARCHAR),
                         new SqlParameter("telefono_contacto_emergencia", Types.NVARCHAR),
-                        new SqlParameter("fotografia", Types.NVARCHAR)
+                        new SqlParameter("fotografia", Types.NVARCHAR),
+                        new SqlParameter( "gmail", Types.NVARCHAR)
                 );
 
         jdbcCall.execute(Map.of(
@@ -44,7 +45,8 @@ public class ClienteData {
                 "direccion", cliente.getDireccion(),
                 "nombre_contacto_emergencia", cliente.getNombreContactoEmergencia(),
                 "telefono_contacto_emergencia", cliente.getTelefonoContactoEmergencia(),
-                "fotografia", cliente.getFotografia()
+                "fotografia", cliente.getFotografia(),
+                "gmail",cliente.getGmail()
         ));
     }
 
@@ -64,21 +66,26 @@ public class ClienteData {
                         new SqlParameter("direccion", Types.NVARCHAR),
                         new SqlParameter("nombre_contacto_emergencia", Types.NVARCHAR),
                         new SqlParameter("telefono_contacto_emergencia", Types.NVARCHAR),
-                        new SqlParameter("fotografia", Types.NVARCHAR)
+                        new SqlParameter("fotografia", Types.NVARCHAR),
+                        new SqlParameter( "gmail", Types.NVARCHAR)
                 );
 
-        jdbcCall.execute(Map.of(
-                "id_cliente", cliente.getIdCliente(),
-                "numero_identificacion", cliente.getNumeroIdentificacion(),
-                "nombre_cliente", cliente.getNombreCliente(),
-                "apellidos_cliente", cliente.getApellidosCliente(),
-                "fecha_nacimiento", cliente.getFechaNacimiento(),
-                "telefono", cliente.getTelefono(),
-                "direccion", cliente.getDireccion(),
-                "nombre_contacto_emergencia", cliente.getNombreContactoEmergencia(),
-                "telefono_contacto_emergencia", cliente.getTelefonoContactoEmergencia(),
-                "fotografia", cliente.getFotografia()
-        ));
+        Map<String, Object> params = new HashMap<>();
+        params.put("id_cliente", cliente.getIdCliente());
+        params.put("numero_identificacion", cliente.getNumeroIdentificacion());
+        params.put("nombre_cliente", cliente.getNombreCliente());
+        params.put("apellidos_cliente", cliente.getApellidosCliente());
+        params.put("telefono", cliente.getTelefono());
+        params.put("direccion", cliente.getDireccion());
+        params.put("gmail", cliente.getGmail());
+        params.put("fecha_nacimiento", cliente.getFechaNacimiento());
+        params.put("nombre_contacto_emergencia", cliente.getNombreContactoEmergencia());
+        params.put("telefono_contacto_emergencia", cliente.getTelefonoContactoEmergencia());
+        params.put("fotografia", cliente.getFotografia());
+
+        jdbcCall.execute(params);
+
+        
     }
 
     @Transactional
@@ -111,6 +118,8 @@ public class ClienteData {
                     cliente.setNombreContactoEmergencia(rs.getString("nombre_contacto_emergencia"));
                     cliente.setTelefonoContactoEmergencia(rs.getString("telefono_contacto_emergencia"));
                     cliente.setFotografia(rs.getString("fotografia"));
+                    cliente.setGmail(rs.getString("gmail"));
+
                     return cliente;
                 });
 
@@ -142,6 +151,8 @@ public class ClienteData {
             cliente.setNombreContactoEmergencia((String) row.get("nombre_contacto_emergencia"));
             cliente.setTelefonoContactoEmergencia((String) row.get("telefono_contacto_emergencia"));
             cliente.setFotografia((String) row.get("fotografia"));
+            cliente.setGmail((String) row.get("gmail"));
+
             clientes.add(cliente);
         }
 

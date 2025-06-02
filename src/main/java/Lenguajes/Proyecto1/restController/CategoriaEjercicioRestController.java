@@ -58,11 +58,12 @@ public class CategoriaEjercicioRestController  {
     	
         try {
             // Guardar imagen
+        	if (imagen != null && !imagen.isEmpty()) {
         	String rutaRelativa = imageStorageService.saveImage(imagen, "categorias");
 
             // Asociar imagen al DTO
             categoriaEjercicioDTO.setImagen(rutaRelativa);
-
+        	}
             // Convertir y guardar
             CategoriaEjercicio categoria = categoriaEjercicioMapper.toEntity(categoriaEjercicioDTO);
             categoriaEjercicioBusiness.saveCategoriaEjercicio(categoria);
