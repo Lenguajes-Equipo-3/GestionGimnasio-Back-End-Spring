@@ -55,21 +55,21 @@ public class RutinaRestController {
     }
 
     @GetMapping("/empleado/{idEmpleado}")
-    public ResponseEntity<RutinaDTO> getRutinaByEmpleadoId(@PathVariable int idEmpleado) {
-        Rutina rutina = rutinaBusiness.getRutinaByEmpleadoId(idEmpleado);
-        if (rutina == null) {
+    public ResponseEntity<List<RutinaDTO>> getRutinaByEmpleadoId(@PathVariable int idEmpleado) {
+        List<Rutina> rutinas = rutinaBusiness.getRutinasByEmpleadoId(idEmpleado);
+        if (rutinas == null || rutinas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(rutinaMapper.toDto(rutina), HttpStatus.OK);
+        return new ResponseEntity<>(rutinas.stream().map(rutinaMapper::toDto).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<RutinaDTO> getRutinaByClienteId(@PathVariable int idCliente) {
-        Rutina rutina = rutinaBusiness.getRutinaByClienteId(idCliente);
-        if (rutina == null) {
+    public ResponseEntity<List<RutinaDTO>> getRutinaByClienteId(@PathVariable int idCliente) {
+        List<Rutina> rutinas = rutinaBusiness.getRutinasByClienteId(idCliente);
+        if (rutinas == null || rutinas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(rutinaMapper.toDto(rutina), HttpStatus.OK);
+        return new ResponseEntity<>(rutinas.stream().map(rutinaMapper::toDto).toList(), HttpStatus.OK);
     }
 
     @PutMapping("/{idRutina}")
