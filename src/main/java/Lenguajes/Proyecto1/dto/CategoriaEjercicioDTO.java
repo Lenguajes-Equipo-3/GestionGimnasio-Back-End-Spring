@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public class CategoriaEjercicioDTO {
 
-    @NotNull(message = "El ID de la categoría no puede ser nulo")
+    //@NotNull(message = "El ID de la categoría no puede ser nulo")
     private int idCategoria;
 
     @NotBlank(message = "El nombre de la categoría no puede estar vacío")

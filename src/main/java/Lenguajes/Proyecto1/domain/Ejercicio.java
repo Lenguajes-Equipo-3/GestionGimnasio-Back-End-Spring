@@ -79,4 +79,14 @@ public class Ejercicio {
     public void setImagenes(List<ImagenEjercicio> imagenes) {
         this.imagenes = imagenes;
     }
+
+	@Override
+	public String toString() {
+		return "Ejercicio [idEjercicio=" + idEjercicio + ", categoriaEjercicio=" + categoriaEjercicio
+				+ ", nombreEjercicio=" + nombreEjercicio + ", descripcionEjercicio=" + descripcionEjercicio
+				+ ", codigoEquipo=" + codigoEquipo + ", imagenes=" + imagenes + "]";
+	}
+    
+    
+    
 }

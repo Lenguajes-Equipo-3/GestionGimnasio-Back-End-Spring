@@ -14,11 +14,12 @@ public class ClienteDTO {
     private String nombreContactoEmergencia;
     private String telefonoContactoEmergencia;
     private String fotografia;
+    private String gmail;
 
     // Constructor
     public ClienteDTO(int idCliente, String numeroIdentificacion, String nombreCliente, String apellidosCliente,
                       LocalDate fechaNacimiento, String telefono, String direccion,
-                      String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia) {
+                      String nombreContactoEmergencia, String telefonoContactoEmergencia, String fotografia,String gmail) {
         this.idCliente = idCliente;
         this.numeroIdentificacion = numeroIdentificacion;
         this.nombreCliente = nombreCliente;
@@ -29,6 +30,8 @@ public class ClienteDTO {
         this.nombreContactoEmergencia = nombreContactoEmergencia;
         this.telefonoContactoEmergencia = telefonoContactoEmergencia;
         this.fotografia = fotografia;
+        this.gmail = gmail;
+
     }
 
     
@@ -80,7 +83,17 @@ this.fotografia = fotografia;
         return apellidosCliente;
     }
 
-    public void setApellidosCliente(String apellidosCliente) {
+    public String getGmail() {
+		return gmail;
+	}
+
+
+	public void setGmail(String gmail) {
+		this.gmail = gmail;
+	}
+
+
+	public void setApellidosCliente(String apellidosCliente) {
         this.apellidosCliente = apellidosCliente;
     }
 

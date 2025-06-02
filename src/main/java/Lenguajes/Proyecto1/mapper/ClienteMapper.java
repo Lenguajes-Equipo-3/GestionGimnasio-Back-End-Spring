@@ -1,39 +1,42 @@
 package Lenguajes.Proyecto1.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+
 import Lenguajes.Proyecto1.domain.Cliente;
 import Lenguajes.Proyecto1.dto.ClienteDTO;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ClienteMapper {
+@Mapper(componentModel = "spring")
+public interface ClienteMapper {
 
-    public ClienteDTO toDTO(Cliente cliente) {
-        return new ClienteDTO(
-                cliente.getIdCliente(),
-                cliente.getNumeroIdentificacion(),
-                cliente.getNombreCliente(),
-                cliente.getApellidosCliente(),
-                cliente.getFechaNacimiento(),
-                cliente.getTelefono(),
-                cliente.getDireccion(),
-                cliente.getNombreContactoEmergencia(),
-                cliente.getTelefonoContactoEmergencia(),
-                cliente.getFotografia()
-        );
-    }
+    ClienteMapper INSTANCE = Mappers.getMapper(ClienteMapper.class);
 
-    public Cliente toEntity(ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente(clienteDTO.getIdCliente());
-        cliente.setNumeroIdentificacion(clienteDTO.getNumeroIdentificacion());
-        cliente.setNombreCliente(clienteDTO.getNombreCliente());
-        cliente.setApellidosCliente(clienteDTO.getApellidosCliente());
-        cliente.setFechaNacimiento(clienteDTO.getFechaNacimiento());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setDireccion(clienteDTO.getDireccion());
-        cliente.setNombreContactoEmergencia(clienteDTO.getNombreContactoEmergencia());
-        cliente.setTelefonoContactoEmergencia(clienteDTO.getTelefonoContactoEmergencia());
-        cliente.setFotografia(clienteDTO.getFotografia());
-        return cliente;
-    }
+    // Mapea entidad a DTO
+    @Mapping(source = "idCliente", target = "idCliente")
+    @Mapping(source = "numeroIdentificacion", target = "numeroIdentificacion")
+    @Mapping(source = "nombreCliente", target = "nombreCliente")
+    @Mapping(source = "apellidosCliente", target = "apellidosCliente")
+    @Mapping(source = "fechaNacimiento", target = "fechaNacimiento")
+    @Mapping(source = "telefono", target = "telefono")
+    @Mapping(source = "direccion", target = "direccion")
+    @Mapping(source = "nombreContactoEmergencia", target = "nombreContactoEmergencia")
+    @Mapping(source = "telefonoContactoEmergencia", target = "telefonoContactoEmergencia")
+    @Mapping(source = "fotografia", target = "fotografia")
+    @Mapping(source = "gmail", target = "gmail")
+    ClienteDTO toDTO(Cliente cliente);
+
+    // Mapea DTO a entidad
+    @Mapping(source = "idCliente", target = "idCliente")
+    @Mapping(source = "numeroIdentificacion", target = "numeroIdentificacion")
+    @Mapping(source = "nombreCliente", target = "nombreCliente")
+    @Mapping(source = "apellidosCliente", target = "apellidosCliente")
+    @Mapping(source = "fechaNacimiento", target = "fechaNacimiento")
+    @Mapping(source = "telefono", target = "telefono")
+    @Mapping(source = "direccion", target = "direccion")
+    @Mapping(source = "nombreContactoEmergencia", target = "nombreContactoEmergencia")
+    @Mapping(source = "telefonoContactoEmergencia", target = "telefonoContactoEmergencia")
+    @Mapping(source = "fotografia", target = "fotografia")
+    @Mapping(source = "gmail", target = "gmail")
+    Cliente toEntity(ClienteDTO clienteDTO);
 }

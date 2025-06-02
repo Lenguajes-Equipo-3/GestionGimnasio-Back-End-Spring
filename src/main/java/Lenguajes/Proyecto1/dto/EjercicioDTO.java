@@ -75,4 +75,14 @@ public class EjercicioDTO {
     public void setImagenes(List<ImagenEjercicioDTO> imagenes) {
         this.imagenes = imagenes;
     }
+
+	@Override
+	public String toString() {
+		return "EjercicioDTO [idEjercicio=" + idEjercicio + ", categoriaEjercicio=" + categoriaEjercicio
+				+ ", nombreEjercicio=" + nombreEjercicio + ", descripcionEjercicio=" + descripcionEjercicio
+				+ ", codigoEquipo=" + codigoEquipo + ", imagenes=" + imagenes + "]";
+	}
+    
+    
+    
 }
