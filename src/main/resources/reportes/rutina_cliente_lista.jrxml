@@ -1,45 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="rutina_cliente_lista" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="535" 
+              leftMargin="30" 
+              rightMargin="30" 
+              topMargin="20" 
+              bottomMargin="20"
+              isIgnorePagination="true">
 
-<jasperReport name="rutina_cliente_lista" pageWidth="595" pageHeight="842" columnWidth="555"
-              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
-              xmlns="http://jasperreports.sourceforge.net/jasperreports"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd">
-
-    <!-- ✅ Parámetro que recibe el subreporte rutina_cliente.jrxml ya compilado -->
     <parameter name="SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
-
-    <!-- ✅ Parámetro que se pasará desde Java hacia rutina_cliente.jrxml -->
     <parameter name="EJERCICIOS_SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
-
-    <!-- Campos del objeto Rutina -->
+    <parameter name="CLIENTE_NOMBRE" class="java.lang.String"/>
+    
     <field name="idRutina" class="java.lang.Integer"/>
     <field name="fechaCreacion" class="java.time.LocalDate"/>
     <field name="fechaRenovacion" class="java.time.LocalDate"/>
     <field name="objetivo" class="java.lang.String"/>
-    <field name="lesiones" class="java.lang.String"/>
-    <field name="enfermedades" class="java.lang.String"/>
     <field name="empleado" class="Lenguajes.Proyecto1.domain.Empleado"/>
-    <field name="cliente" class="Lenguajes.Proyecto1.domain.Cliente"/>
     <field name="ejercicios" class="java.util.List"/>
+    <field name="cliente" class="Lenguajes.Proyecto1.domain.Cliente"/>
+  <field name="clienteNombre" class="java.lang.String"/>
+<field name="clienteApellidos" class="java.lang.String"/>
+    
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement x="0" y="0" width="535" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[REPORTE DE RUTINAS]]></text>
+            </staticText>
+            
+          <textField>
+    <reportElement x="0" y="0" width="200" height="20"/>
+    <textFieldExpression><![CDATA[$F{clienteNombre}]]></textFieldExpression>
+</textField>
 
+<textField>
+    <reportElement x="0" y="30" width="200" height="20"/>
+    <textFieldExpression><![CDATA[$F{clienteApellidos}]]></textFieldExpression>
+</textField>
+
+            
+            <line>
+                <reportElement x="0" y="60" width="535" height="1"/>
+            </line>
+        </band>
+    </title>
+    
     <detail>
-        <band height="400">
+        <band height="200">
+            <!-- Subreporte de información de rutina -->
             <subreport>
-                <reportElement x="0" y="0" width="555" height="200"/>
-
-                <!-- ✅ Pasar el subreporte de ejercicios como parámetro al subreporte rutina_cliente -->
-                <subreportParameter name="EJERCICIOS_SUBREPORT">
-                    <subreportParameterExpression><![CDATA[$P{EJERCICIOS_SUBREPORT}]]></subreportParameterExpression>
+                <reportElement x="0" y="0" width="535" height="30" isRemoveLineWhenBlank="true"/>
+                <subreportParameter name="EMPLEADO">
+                    <subreportParameterExpression><![CDATA[$F{empleado}]]></subreportParameterExpression>
                 </subreportParameter>
-
-                <!-- ✅ Fuente de datos para cada rutina -->
-                <dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(java.util.Arrays.asList($F{this}))]]></dataSourceExpression>
-
-                <!-- ✅ Subreporte principal rutina_cliente.jrxml -->
                 <subreportExpression><![CDATA[$P{SUBREPORT}]]></subreportExpression>
+            </subreport>
+            
+            <!-- Información básica de rutina -->
+            <staticText>
+                <reportElement x="0" y="40" width="100" height="20"/>
+                <text><![CDATA[ID Rutina:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="40" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{idRutina}]]></textFieldExpression>
+            </textField>
+            
+            <staticText>
+                <reportElement x="0" y="70" width="100" height="20"/>
+                <text><![CDATA[Fecha Creación:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="70" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{fechaCreacion}]]></textFieldExpression>
+            </textField>
+            
+           <staticText>
+    <reportElement x="0" y="100" width="100" height="20"/>
+    <text><![CDATA[Objetivo:]]></text>
+</staticText>
+
+<textField isStretchWithOverflow="true">
+    <reportElement x="100" y="100" width="435" height="40"/>
+    <textElement verticalAlignment="Top"/>
+    <textFieldExpression><![CDATA[$F{objetivo}]]></textFieldExpression>
+</textField>
+
+            
+            <!-- Título sección ejercicios -->
+            <staticText>
+                <reportElement x="0" y="150" width="535" height="20"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ejercicios asignados:]]></text>
+            </staticText>
+            
+            <!-- Subreporte de ejercicios -->
+            <subreport>
+                <reportElement x="0" y="170" width="535" height="30" isRemoveLineWhenBlank="true"/>
+                <dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ejercicios})]]></dataSourceExpression>
+                <subreportExpression><![CDATA[$P{EJERCICIOS_SUBREPORT}]]></subreportExpression>
             </subreport>
         </band>
     </detail>
-
+    
+    <pageFooter>
+        <band height="30">
+            <textField evaluationTime="Report">
+                <reportElement x="400" y="0" width="135" height="20"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="25" width="535" height="1"/>
+            </line>
+        </band>
+    </pageFooter>
 </jasperReport>

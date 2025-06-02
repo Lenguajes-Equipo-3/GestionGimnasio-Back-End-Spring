@@ -19,44 +19,45 @@ public class ReporteRutinaService {
     @Autowired
     private RutinaData rutinaData;
 
-public void exportarRutinasClientePDF(int idCliente, OutputStream outputStream) {
-    try {
-        List<Rutina> rutinas = rutinaData.findRutinasByClienteId(idCliente);
-        if (rutinas == null || rutinas.isEmpty()) {
-            throw new RuntimeException("No se encontraron rutinas para el cliente con ID: " + idCliente);
+    public void exportarRutinasClientePDF(int idCliente, OutputStream outputStream) {
+        try {
+            List<Rutina> rutinas = rutinaData.findRutinasByClienteId(idCliente);
+            if (rutinas == null || rutinas.isEmpty()) {
+                throw new RuntimeException("No se encontraron rutinas para el cliente con ID: " + idCliente);
+            }
+
+            // Obtener nombre del cliente (del primer registro)
+            String nombreCliente = rutinas.get(0).getCliente().getNombreCliente() + " " + 
+                                 rutinas.get(0).getCliente().getApellidosCliente();
+
+            // Cargar y compilar reportes
+            InputStream ejerciciosStream = getClass().getResourceAsStream("/reportes/ejercicios_rutina.jrxml");
+            JasperReport subreporteEjercicios = JasperCompileManager.compileReport(ejerciciosStream);
+
+            InputStream rutinaStream = getClass().getResourceAsStream("/reportes/rutina_cliente.jrxml");
+            JasperReport subreporteRutina = JasperCompileManager.compileReport(rutinaStream);
+
+            InputStream listaStream = getClass().getResourceAsStream("/reportes/rutina_cliente_lista.jrxml");
+            JasperReport reportePrincipal = JasperCompileManager.compileReport(listaStream);
+
+            // Preparar parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("SUBREPORT", subreporteRutina);
+            parametros.put("EJERCICIOS_SUBREPORT", subreporteEjercicios);
+            parametros.put("CLIENTE_NOMBRE", nombreCliente);
+
+            // Crear datasource principal
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rutinas);
+
+            // Generar y exportar PDF
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reportePrincipal, parametros, dataSource);
+            JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al generar el PDF de rutina", e);
         }
-
-        
-        
-        System.out.println(rutinas.size() );
-        // Compilar subreportes
-        InputStream ejerciciosStream = getClass().getResourceAsStream("/reportes/ejercicios_rutina.jrxml");
-        JasperReport subreporteEjercicios = JasperCompileManager.compileReport(ejerciciosStream);
-
-        InputStream rutinaStream = getClass().getResourceAsStream("/reportes/rutina_cliente.jrxml");
-        JasperReport subreporteRutina = JasperCompileManager.compileReport(rutinaStream);
-
-        InputStream listaStream = getClass().getResourceAsStream("/reportes/rutina_cliente_lista.jrxml");
-        JasperReport reportePrincipal = JasperCompileManager.compileReport(listaStream);
-
-        // Parámetros que se pasan a cada uso del subreporte rutina_cliente.jrxml
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("SUBREPORT", subreporteRutina);
-        parametros.put("EJERCICIOS_SUBREPORT", subreporteEjercicios);
-        
-
-        // Llenar el reporte con la lista de rutinas
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rutinas);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(reportePrincipal, parametros, dataSource);
-
-        // Exportar a PDF
-        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new RuntimeException("Error al generar el PDF de rutinas del cliente", e);
     }
-}
 
 
 }

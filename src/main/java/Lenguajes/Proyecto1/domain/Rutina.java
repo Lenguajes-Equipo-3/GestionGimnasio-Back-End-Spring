@@ -111,5 +111,14 @@ public class Rutina {
     public void setMedidas(List<ItemRutinaMedida> medidas) {
         this.medidas = medidas;
     }
+    
+    
+    public String getClienteNombre() {
+        return cliente != null ? cliente.getNombreCliente() : "";
+    }
+
+    public String getClienteApellidos() {
+        return cliente != null ? cliente.getApellidosCliente() : "";
+    }
 
 }

@@ -1,100 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="rutina_cliente_lista" 
+              pageWidth="595" 
+              pageHeight="842" 
+              columnWidth="535" 
+              leftMargin="30" 
+              rightMargin="30" 
+              topMargin="20" 
+              bottomMargin="20"
+              isIgnorePagination="true">
 
-<jasperReport name="rutina_cliente"
-              pageWidth="595" pageHeight="842" columnWidth="555"
-              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
-              xmlns="http://jasperreports.sourceforge.net/jasperreports"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd">
-
-    <!-- ✅ Parámetro para recibir el subreporte de ejercicios -->
-    <parameter name="EJERCICIOS_SUBREPORT" class="net.sf.jasperreports.engine.JasperReport"/>
-
-    <!-- ✅ Campo con la lista de ejercicios -->
-    <field name="ejercicios" class="java.util.List"/>
-
-    <!-- Campos del objeto Rutina -->
-    <field name="fechaCreacion" class="java.time.LocalDate"/>
-    <field name="fechaRenovacion" class="java.time.LocalDate"/>
-    <field name="objetivo" class="java.lang.String"/>
-    <field name="lesiones" class="java.lang.String"/>
-    <field name="enfermedades" class="java.lang.String"/>
-    <field name="empleado.nombreEmpleado" class="java.lang.String"/>
-    <field name="cliente.nombreCliente" class="java.lang.String"/>
-    <field name="cliente.apellidosCliente" class="java.lang.String"/>
-    <field name="cliente.telefono" class="java.lang.String"/>
-
-    <title>
-        <band height="80">
-            <staticText>
-                <reportElement x="0" y="0" width="200" height="30"/>
-                <textElement><font size="16" isBold="true"/></textElement>
-                <text><![CDATA[Rutina Personalizada]]></text>
-            </staticText>
-
-            <textField>
-                <reportElement x="0" y="40" width="400" height="20"/>
-                <textFieldExpression><![CDATA["Cliente: " + $F{cliente.nombreCliente} + " " + $F{cliente.apellidosCliente}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="60" width="400" height="20"/>
-                <textFieldExpression><![CDATA["Teléfono: " + $F{cliente.telefono}]]></textFieldExpression>
-            </textField>
-        </band>
-    </title>
-
+    <parameter name="EMPLEADO" class="Lenguajes.Proyecto1.domain.Empleado"/>
+    
     <detail>
-        <band height="140">
+        <band height="80">
+            <!-- Ajusta posiciones y anchos -->
+            <staticText>
+                <reportElement x="0" y="0" width="80" height="20"/>
+                <text><![CDATA[Entrenador:]]></text>
+            </staticText>
             <textField>
-                <reportElement x="0" y="0" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Entrenador: " + $F{empleado.nombreEmpleado}]]></textFieldExpression>
+                <reportElement x="80" y="0" width="200" height="20"/>
+                <textFieldExpression><![CDATA[$P{EMPLEADO}.getNombreEmpleado() + " " + $P{EMPLEADO}.getApellidosEmpleado()]]></textFieldExpression>
             </textField>
-
+            
+            <staticText>
+                <reportElement x="0" y="30" width="80" height="20"/>
+                <text><![CDATA[Rol:]]></text>
+            </staticText>
             <textField>
-                <reportElement x="0" y="20" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Fecha Creación: " + $F{fechaCreacion}.toString()]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="40" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Fecha Renovación: " + $F{fechaRenovacion}.toString()]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="60" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Objetivo: " + $F{objetivo}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="80" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Lesiones: " + $F{lesiones}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="0" y="100" width="300" height="20"/>
-                <textFieldExpression><![CDATA["Enfermedades: " + $F{enfermedades}]]></textFieldExpression>
+                <reportElement x="80" y="30" width="200" height="20"/>
+                <textFieldExpression><![CDATA[$P{EMPLEADO}.getNombreRol()]]></textFieldExpression>
             </textField>
         </band>
     </detail>
-
-    <!-- ✅ Subreporte para ejercicios -->
-    <summary>
-        <band height="300">
-            <subreport>
-                <reportElement x="0" y="0" width="555" height="300"/>
-                
-                <!-- ✅ Fuente de datos: ejercicios de la rutina -->
-                <dataSourceExpression><![CDATA[
-                    new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ejercicios})
-                ]]></dataSourceExpression>
-                
-                <!-- ✅ Subreporte compilado enviado desde Java -->
-                <subreportExpression><![CDATA[
-                    $P{EJERCICIOS_SUBREPORT}
-                ]]></subreportExpression>
-            </subreport>
-        </band>
-    </summary>
-
 </jasperReport>
